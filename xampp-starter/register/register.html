@@ -68,133 +68,96 @@
         color:crimson;
      }
      
-     .form-container form .error-msg{
-        margin:10px 0;
-        display: block;
-        background: crimson;
-        color:#fff;
-        border-radius: 5px;
-        font-size: 20px;
-        padding:10px;
+     .checkboxes{
+        
+        text-align: left
      }
 
-     .multiselect {
-        width: 200px;
-      }
-      
-      .selectBox {
-        position: relative;
-      }
-      
-      .selectBox select {
-        width: 100%;
-        font-weight: bold;
-      }
-      
-      .overSelect {
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-      }
-      
-      #checkboxes {
-        display: none;
-        border: 1px #dadada solid;
-      }
-      
-      #checkboxes label {
-        display: block;
-      }
-      
-      #checkboxes label:hover {
-        background-color: #1e90ff;
-      }
   
 
 </style>
 
+
+
 <script>
 
-    var expanded = false;
-
-function showCheckboxes() {
-  var checkboxes = document.getElementById("checkboxes");
-  if (!expanded) {
-    checkboxes.style.display = "block";
-    expanded = true;
-  } else {
-    checkboxes.style.display = "none";
-    expanded = false;
-  }
+    function valthisform()
+{
+    var checkboxs=document.getElementsByClassName("checkboxes");
+    var okay=false;
+    for(var i=0,l=checkboxs.length;i<l;i++)
+    {
+        if(checkboxs[i].checked)
+        {
+            okay=true;
+            break;
+        }
+    }
+    if(okay)alert("Thank you for checking a checkbox");
+    else alert("Please check a checkbox");
 }
 
 </script>
+    
 
 </head>
 <body>
 
     <div class="form-container">
 
-        <form action="" method="post">
+        <form action="register.php" method="post">
            <h3>register now</h3>
 
-           <input type="text" name="fname" required placeholder="first name" width ="30">
+           <input type="text" name="fname" required placeholder="first name">
 
-           <input type="text" name="lname " required placeholder="last name">
+           <input type="text" name="lname" required placeholder="last name">
 
-           <input type="email" name="email" required placeholder="email">
+           <input type="text" name="email" required placeholder="email">
 
-           <input type="password" name="password" required placeholder="password"> 
+           <input type="text" name="password" required placeholder="password"> 
 
-           <input type="sID" name="sID" required placeholder="student ID*"> 
+           <input type="text" name="sID" placeholder="student ID*"> 
+
+           <input type="text" name="courses" placeholder="courses registered"> 
 
             <br>
             <br>
             <div style = "text-align: left">
               <input
+                class = "checkboxes"
                 type="checkbox"
                 name="isStudent"
-                value="isStudent" />
+                value="isStudent"
+                required/>
               <label for="isStudent">Student</label> <br>
 
                 <input
+                  class = "checkboxes"
                   type="checkbox"
                   name="isProf"
-                  value="isProf" />
+                  value="isProf"
+                  required/>
                 <label for="isProf">Professor</label><br>
           
                 <input
+                  class = "checkboxes"
                   type="checkbox"
                   name="isTA"
-                  value="isTA" />
+                  value="isTA"
+                  required/>
                 <label for="isTA">Teaching Assistant</label><br>
 
                 <input
+                  class = "checkboxes"
                   type="checkbox"
                   name="isAdmin"
-                  value="isAdmin" />
+                  value="isAdmin"
+                  required/>
                 <label for="isAdmin">TA Administrator</label><br><br>
+
             
             </div>
             
-
-            <div class="multiselect">
-                <div class="selectBox" onclick="showCheckboxes()">
-                  <select>
-                    <option>Select courses</option>
-                  </select>
-                  <div class="overSelect"></div>
-                </div>
-                <div id="checkboxes">
-                  <label for="one">
-                    <input type="checkbox" id="C250" />COMP 250</label>
-                  <label for="two">
-                    <input type="checkbox" id="C402" />COMP 402 </label>
-                </div>
-              </div>
-
               <br>
               <br>
 
