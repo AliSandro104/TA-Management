@@ -4,7 +4,7 @@ function sendLoginRequest() {
 
     try {
         const syncRequest = new XMLHttpRequest();
-        syncRequest.open("POST", "login.php", false);
+        syncRequest.open("POST", "../cgi_bin/login.php", false);
         syncRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         syncRequest.send(`email=${email}&password=${password}`);
 
