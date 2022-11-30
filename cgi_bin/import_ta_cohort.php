@@ -39,7 +39,7 @@ if(isset($_FILES['myfile'])){
     }
 }
 $conn->close();
-header("Location: admin.php");
+header("Location: ../dashboard/dashboard_admin.php");
 exit();
 
 ?>

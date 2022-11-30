@@ -120,7 +120,7 @@
             <div class="modal-content">
               <form
                 id="upload-user-form"
-                action="import_ta_cohort.php"
+                action="../cgi_bin/import_ta_cohort.php"
                 method="post"
                 enctype = "multipart/form-data"
               >
@@ -199,7 +199,7 @@
             <div class="modal-content">
               <form
                 id="upload-user-form"
-                action="import_course_quota.php"
+                action="../cgi_bin/import_course_quota.php"
                 method="post"
                 enctype = "multipart/form-data"
               >
@@ -264,6 +264,6 @@
       }
       document.onload = loadExistingData();
     </script>
-    <script src="./admin.js"></script>
+    <script src="./dashboard_admin.js"></script>
   </body>
 </html>
