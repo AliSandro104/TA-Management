@@ -30,4 +30,6 @@ if(isset($_FILES['myfile'])){
     }
 }
 $conn->close();
+header("Location: admin.php");
+exit();
 ?>

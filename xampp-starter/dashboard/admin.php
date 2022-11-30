@@ -14,17 +14,40 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
   <style type="text/css">
     .import-button {
         margin-top: 20px;
     }
+
+    .accordion {
+      background-color: #eee;
+      color: #444;
+      cursor: pointer;
+      padding: 18px;
+      width: 100%;
+      border: none;
+      text-align: left;
+      outline: none;
+      font-size: 15px;
+      transition: 0.4s;
+    }
+
+    .active2, .accordion:hover {
+      background-color: #ccc; 
+    }
+
+    .panel {
+      padding: 0 18px;
+      display: none;
+      background-color: white;
+      overflow: hidden;
+    }
   </style>
 
   <body>
-    <script src="./manage_users.js"></script>
-    <script src="./manage_courses.js"></script>
-    <script src="./manage_profs.js"></script>
+    <script src="./admin.js"></script>
     <script
       src="https://code.jquery.com/jquery-3.3.1.js"
       integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
@@ -128,6 +151,38 @@
             </div>
           </div>
         </div>
+          <h1 style="margin-top: 20px;">List of TA with their info</h1>
+          <?php
+            // Create connection
+            $conn = new mysqli("localhost", "root", "", "ta-management");
+            // Check connection
+            if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+            }
+            $result = $conn -> query("SELECT * FROM ta_cohort");
+              while($row = mysqli_fetch_array($result)) {
+          ?>
+            <button class="accordion"><?php echo $row['TAName']?></button>
+            <div class="panel" style="margin-top: 20px;">
+              <p><b>Semester of application: </b><?php echo $row['TermYear']?></p>
+              <p><b>Legal name: </b><?php echo $row['LegalName']?></p>
+              <p><b>Student ID: </b><?php echo $row['StudentID']?></p>
+              <p><b>Email: </b><?php echo $row['Email']?></p>
+              <p><b>Grad/Ugrad: </b><?php echo $row['GradUgrad']?></p>
+              <p><b>Supervisor Name: </b><?php echo $row['SupervisorName']?></p>
+              <p><b>Priority: </b><?php echo $row['Priority']?></p>
+              <p><b>Number of hours: </b><?php echo $row['NumberHours']?></p>
+              <p><b>Date Applied: </b><?php echo $row['DateApplied']?></p>
+              <p><b>Location: </b><?php echo $row['TheLocation']?></p>
+              <p><b>Phone: </b><?php echo $row['Phone']?></p>
+              <p><b>Degree: </b><?php echo $row['Degree']?></p>
+              <p><b>Courses Applied To: </b><?php echo $row['CoursesApplied']?></p>
+              <p><b>Open to other courses: </b><?php echo $row['OpenToOtherCourses']?></p>
+              <p><b>Notes: </b><?php echo $row['Notes']?></p>
+            </div>
+          <?php
+            }
+          ?>
         </div>
         <div class="tab-pane fade" id="nav-courses" role="tabpanel">
             <button
@@ -175,6 +230,29 @@
             </div>
           </div>
         </div>
+            <h1 style="margin-top: 20px;">List of courses</h1>
+            <?php
+                // Create connection
+                $conn = new mysqli("localhost", "root", "", "ta-management");
+                // Check connection
+                if ($conn->connect_error) {
+                    die("Connection failed: " . $conn->connect_error);
+                }
+                $result = $conn -> query("SELECT * FROM courses_quota");
+                while($row = mysqli_fetch_array($result)) {
+            ?>
+                <button class="accordion"><?php echo $row['CourseNumber']?></button>
+                <div class="panel" style="margin-top: 20px;">
+                <p><b>Term Year: </b><?php echo $row['TermYear']?></p>
+                <p><b>Course Name: </b><?php echo $row['CourseName']?></p>
+                <p><b>Course Type: </b><?php echo $row['CourseType']?></p>
+                <p><b>Instructor Name: </b><?php echo $row['InstructorName']?></p>
+                <p><b>Enrollment Number: </b><b style="font-weight: normal;" class="enrollment-number"><?php echo $row['EnrollmentNumber']?></b></p>
+                <p><b>TA Quota: </b><b style="font-weight: normal;" class="ta-quota"><?php echo $row['TAQuota']?></b></p>
+                </div>
+            <?php
+                }
+            ?>
         </div>
       </div>
     </div>
@@ -186,5 +264,6 @@
       }
       document.onload = loadExistingData();
     </script>
+    <script src="./admin.js"></script>
   </body>
 </html>

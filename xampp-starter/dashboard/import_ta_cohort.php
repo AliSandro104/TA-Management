@@ -39,7 +39,7 @@ if(isset($_FILES['myfile'])){
     }
 }
 $conn->close();
-header("Location: admin.html");
+header("Location: admin.php");
 exit();
 
 ?>
