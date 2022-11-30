@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 30, 2022 at 11:48 PM
+-- Generation Time: Dec 01, 2022 at 12:13 AM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -43,6 +43,30 @@ CREATE TABLE `course` (
 INSERT INTO `course` (`courseName`, `courseDesc`, `term`, `year`, `courseNumber`, `courseInstructor`) VALUES
 ('Principles of Web Development', 'The course discusses the major principles, algorithms, languages and technologies that underlie web development. Students receive practical hands-on experience through a project.', 'Fall', '2022', 'COMP 250', 'joseph@comp307.com'),
 ('Honours Project in Computer Science and Biology', 'One-semester research project applying computational approaches to a biological problem. The project is (co)-supervised by a professor in Computer Science and/or Biology or related fields.', 'Winter', '2023', 'COMP 402', 'mathieu@comp307.com');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `courses_quota`
+--
+
+CREATE TABLE `courses_quota` (
+  `TermYear` varchar(100) NOT NULL,
+  `CourseNumber` varchar(100) NOT NULL,
+  `CourseName` varchar(100) NOT NULL,
+  `CourseType` varchar(100) NOT NULL,
+  `InstructorName` varchar(100) NOT NULL,
+  `EnrollmentNumber` int(11) NOT NULL,
+  `TAQuota` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `courses_quota`
+--
+
+INSERT INTO `courses_quota` (`TermYear`, `CourseNumber`, `CourseName`, `CourseType`, `InstructorName`, `EnrollmentNumber`, `TAQuota`) VALUES
+('Winter 2023', 'COMP 250', 'Regular', 'Intro to Computer Science', 'Giulia Alberini', 100, 3),
+('Winter 2023', 'COMP 421', 'Regular', 'Database Systems', 'Bettina Kemme', 90, 4);
 
 -- --------------------------------------------------------
 
@@ -90,6 +114,51 @@ INSERT INTO `students` (`email`, `studentID`) VALUES
 ('test3@test.com', '181818188'),
 ('test4@test.com', '181818188'),
 ('test5@test.com', '555555555');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ta_assigned`
+--
+
+CREATE TABLE `ta_assigned` (
+  `TAName` varchar(100) NOT NULL,
+  `TAEmail` varchar(100) NOT NULL,
+  `CourseAssigned` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ta_cohort`
+--
+
+CREATE TABLE `ta_cohort` (
+  `TermYear` varchar(100) NOT NULL,
+  `TAName` varchar(100) NOT NULL,
+  `StudentID` varchar(100) NOT NULL,
+  `LegalName` varchar(100) NOT NULL,
+  `Email` varchar(100) NOT NULL,
+  `GradUgrad` varchar(100) NOT NULL,
+  `SupervisorName` varchar(100) NOT NULL,
+  `Priority` varchar(100) NOT NULL,
+  `NumberHours` int(11) NOT NULL,
+  `DateApplied` varchar(100) NOT NULL,
+  `TheLocation` varchar(100) NOT NULL,
+  `Phone` varchar(100) NOT NULL,
+  `Degree` varchar(100) NOT NULL,
+  `CoursesApplied` varchar(100) NOT NULL,
+  `OpenToOtherCourses` varchar(100) NOT NULL,
+  `Notes` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `ta_cohort`
+--
+
+INSERT INTO `ta_cohort` (`TermYear`, `TAName`, `StudentID`, `LegalName`, `Email`, `GradUgrad`, `SupervisorName`, `Priority`, `NumberHours`, `DateApplied`, `TheLocation`, `Phone`, `Degree`, `CoursesApplied`, `OpenToOtherCourses`, `Notes`) VALUES
+('Winter 2023', 'Ali Hazime', '111222333', 'Ali Hazime', 'ali.hazime@mail.mcgill.ca', 'ugrad', 'Giulia Alberini', 'no', 90, '2022-11-29', 'trottier', '5141234567', 'Computer Science', 'COMP 250', 'yes', ''),
+('Winter 2023', 'Moustapha Moumneh', '444555666', 'Moustapha Moumneh', 'moustapha.moumneh@mail.mcgill.ca', 'grad', 'Mathieu Blanchette', 'yes', 180, '2022-10-29', 'trottier', '5149876543', 'Computer Science', 'COMP 250', 'no', '');
 
 -- --------------------------------------------------------
 
