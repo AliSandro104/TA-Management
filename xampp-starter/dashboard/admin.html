@@ -90,18 +90,19 @@
           data-target="#import-ta"
         >
           <i class="fa fa-download"></i>
-          Import TA cohort
+          Import TA Cohort
         </button>
         <div class="modal fade" id="import-ta" tabindex="-1" role="dialog">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <form
                 id="upload-user-form"
-                action="javascript:saveMultipleNewAccounts()"
+                action="import_ta_cohort.php"
                 method="post"
+                enctype = "multipart/form-data"
               >
                 <div class="modal-header">
-                  <h3 class="modal-title">Import Users</h3>
+                  <h3 class="modal-title">Import TA Cohort</h3>
                   <button
                     type="button"
                     class="close"
@@ -112,7 +113,7 @@
                   </button>
                 </div>
                 <div class="modal-body">
-                  <input id="user-upload-csv" type="file" />
+                  <input type="file" name="myfile"/>
                 </div>
                 <div class="modal-footer">
                   <input
@@ -121,14 +122,60 @@
                     data-dismiss="modal"
                     value="Cancel"
                   />
-                  <input type="submit" class="btn btn-light" value="Save" />
+                  <input type="submit" class="btn btn-light" />
                 </div>
               </form>
             </div>
           </div>
         </div>
         </div>
-        <div class="tab-pane fade show active" id="nav-courses" role="tabpanel"></div>
+        <div class="tab-pane fade" id="nav-courses" role="tabpanel">
+            <button
+          type="button"
+          class="btn btn-outline-secondary import-button"
+          data-toggle="modal"
+          data-target="#import-quota"
+        >
+          <i class="fa fa-download"></i>
+          Import Courses Quota
+        </button>
+        <div class="modal fade" id="import-quota" tabindex="-1" role="dialog">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <form
+                id="upload-user-form"
+                action="import_course_quota.php"
+                method="post"
+                enctype = "multipart/form-data"
+              >
+                <div class="modal-header">
+                  <h3 class="modal-title">Import Courses Quota</h3>
+                  <button
+                    type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close"
+                  >
+                    <i class="fa fa-close"></i>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <input type="file" name="myfile"/>
+                </div>
+                <div class="modal-footer">
+                  <input
+                    type="button"
+                    class="btn btn-light"
+                    data-dismiss="modal"
+                    value="Cancel"
+                  />
+                  <input type="submit" class="btn btn-light" />
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        </div>
       </div>
     </div>
     <script>
