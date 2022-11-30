@@ -88,7 +88,7 @@
     $servername = "localhost";
     $username = "root";
     $db_password = "";
-    $dbname = "users";
+    $dbname = "ta-management";
 
     // Connect to database and check if successful
     $con = mysqli_connect($servername, $username, $db_password, $dbname);
@@ -226,7 +226,7 @@
             <h4> Select at least ONE course:</h4>
 
             <?php
-            $con = mysqli_connect("localhost","root","","users");
+            $con = mysqli_connect("localhost","root","","ta-management");
 
             $query = "SELECT * FROM course";
             $query_run = mysqli_query($con, $query);

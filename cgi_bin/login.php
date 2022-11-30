@@ -5,7 +5,7 @@
 $servername = "localhost"; // Change accordingly
 $username = "root"; // Change accordingly
 $password = ""; // Change accordingly
-$db = "users"; // Change accordingly
+$db = "ta-management"; // Change accordingly
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $db);
