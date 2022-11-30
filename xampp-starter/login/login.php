@@ -3,9 +3,9 @@
 // Nice resource for PHP & MySQL: https://phpdelusions.net/mysqli
 
 $servername = "localhost"; // Change accordingly
-$username = "xampp_starter"; // Change accordingly
-$password = "qV[eoVIhLYT/uYgr"; // Change accordingly
-$db = "xampp_starter"; // Change accordingly
+$username = "root"; // Change accordingly
+$password = ""; // Change accordingly
+$db = "users"; // Change accordingly
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $db);
@@ -24,10 +24,12 @@ $user = $result->fetch_assoc();
 $conn->close();
 
 if ($user) {
-    // retrieve password from database
-    $hashed_pass = $user['password'];
+    // retrieve password from database and hash it
+    $hashed_pass = password_hash($user['password'], PASSWORD_DEFAULT);
+
     // check against the user input password
     $login_success = password_verify($_POST['password'], $hashed_pass);
+
     if ($login_success) {
         session_start();
         $_SESSION["email"] = $email;

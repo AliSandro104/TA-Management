@@ -1,10 +1,12 @@
 <?php 
 session_start();
+
+
 if (array_key_exists("email", $_SESSION)) {
     $servername = "localhost"; // Change accordingly
-    $username = "xampp_starter"; // Change accordingly
-    $password = "qV[eoVIhLYT/uYgr"; // Change accordingly
-    $db = "xampp_starter"; // Change accordingly
+    $username = "root"; // Change accordingly
+    $password = ""; // Change accordingly
+    $db = "users"; // Change accordingly
 
     // Create connection
     $conn = new mysqli($servername, $username, $password, $db);
@@ -23,6 +25,7 @@ if (array_key_exists("email", $_SESSION)) {
     $conn->close();
 
     $username = $user[0] . ' ' . $user[1];
+    echo "$username"
 
     echo '<div class="welcomeMessage">
                 Welcome '. $user['firstName'] . '!</div>';
