@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../media/favicon.ico" type="image/ico">
+    <title>Register Page</title>
+
+<style>
+    .container .content .btn:hover{
+        background: crimson;
+     }
+     
+     .form-container{
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding:20px;
+        padding-bottom: 60px;
+        background: #eee;
+     }
+     
+     .form-container form{
+        padding:20px;
+        border-radius: 5px;
+        box-shadow: 0 5px 10px rgba(0,0,0,.1);
+        background: #fff;
+        text-align: center;
+        width: 500px;
+     }
+     
+     .form-container form h3{
+        font-size: 30px;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+        color:#333;
+     }
+
+     .form-container form input{
+        padding:10px 15px;
+        font-size: 17px;
+        margin:8px 0;
+        background: #eee;
+     }
+     
+     .form-container form .form-btn{
+        background: #fbd0d9;
+        color:crimson;
+        text-transform: capitalize;
+        font-size: 20px;
+        cursor: pointer;
+     }
+     
+     .form-container form .form-btn:hover{
+        background: crimson;
+        color:#fff;
+     }
+     
+     .form-container form p{
+        margin-top: 10px;
+        font-size: 20px;
+        color:#333;
+     }
+     
+     .form-container form p a{
+        color:crimson;
+     }
+     
+     .form-container form .error-msg{
+        margin:10px 0;
+        display: block;
+        background: crimson;
+        color:#fff;
+        border-radius: 5px;
+        font-size: 20px;
+        padding:10px;
+     }
+
+     .multiselect {
+        width: 200px;
+      }
+      
+      .selectBox {
+        position: relative;
+      }
+      
+      .selectBox select {
+        width: 100%;
+        font-weight: bold;
+      }
+      
+      .overSelect {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+      }
+      
+      #checkboxes {
+        display: none;
+        border: 1px #dadada solid;
+      }
+      
+      #checkboxes label {
+        display: block;
+      }
+      
+      #checkboxes label:hover {
+        background-color: #1e90ff;
+      }
+  
+
+</style>
+
+<script>
+
+    var expanded = false;
+
+function showCheckboxes() {
+  var checkboxes = document.getElementById("checkboxes");
+  if (!expanded) {
+    checkboxes.style.display = "block";
+    expanded = true;
+  } else {
+    checkboxes.style.display = "none";
+    expanded = false;
+  }
+}
+
+</script>
+
+</head>
+<body>
+
+    <div class="form-container">
+
+        <form action="" method="post">
+           <h3>register now</h3>
+
+           <input type="text" name="fname" required placeholder="first name" width ="30">
+
+           <input type="text" name="lname " required placeholder="last name">
+
+           <input type="email" name="email" required placeholder="email">
+
+           <input type="password" name="password" required placeholder="password"> 
+
+           <input type="sID" name="sID" required placeholder="student ID*"> 
+
+            <br>
+            <br>
+            <div style = "text-align: left">
+              <input
+                type="checkbox"
+                name="isStudent"
+                value="isStudent" />
+              <label for="isStudent">Student</label> <br>
+
+                <input
+                  type="checkbox"
+                  name="isProf"
+                  value="isProf" />
+                <label for="isProf">Professor</label><br>
+          
+                <input
+                  type="checkbox"
+                  name="isTA"
+                  value="isTA" />
+                <label for="isTA">Teaching Assistant</label><br>
+
+                <input
+                  type="checkbox"
+                  name="isAdmin"
+                  value="isAdmin" />
+                <label for="isAdmin">TA Administrator</label><br><br>
+            
+            </div>
+            
+
+            <div class="multiselect">
+                <div class="selectBox" onclick="showCheckboxes()">
+                  <select>
+                    <option>Select courses</option>
+                  </select>
+                  <div class="overSelect"></div>
+                </div>
+                <div id="checkboxes">
+                  <label for="one">
+                    <input type="checkbox" id="C250" />COMP 250</label>
+                  <label for="two">
+                    <input type="checkbox" id="C402" />COMP 402 </label>
+                </div>
+              </div>
+
+              <br>
+              <br>
+
+            
+           <input type="submit" name="submit" value="register now" class="form-btn">
+           <p>already have an account? <a href="../login/login.html">login now</a></p>
+        </form>
+     
+     </div>     
+
+
+</body>
+</html>
+
+
