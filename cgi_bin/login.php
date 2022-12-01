@@ -34,7 +34,7 @@ if ($user) {
         session_start();
         $_SESSION["email"] = $email;
         echo "<script>function redirect() { 
-                window.location.replace('../dashboard/dashboard.html'); 
+                window.location.replace('../dashboard/dashboard.php'); 
             }</script>";
     } else {
         echo '<text>Password is incorrect. Try again.</text>';

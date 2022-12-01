@@ -120,6 +120,8 @@
 
                     #add to professor table if user is a professor and update index in user_usertype
                     if ($chkval == 'isProf'){
+                        
+                        
 
                         $query2= "insert into user_usertype (userId, userTypeId) values ('$email',2)";
                         mysqli_query($con, $query2);
@@ -168,6 +170,21 @@
 ?>
 
 <body>
+
+    <div class="container">
+        <nav class="navbar">
+            <!-- Header -->
+            <div class="container-fluid">
+            <!-- Logo and User Role  -->
+            <div style="text-align:center">
+                <img
+                src="../media/mcgill_logo.png"
+                style="width: 20rem; height: auto"
+                alt="mcgill-logo"/>
+            </div>
+            </div>
+        </nav>
+    </div>
 
     <div class="form-container" id="form1">
 

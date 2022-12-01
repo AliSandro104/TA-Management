@@ -1,3 +1,8 @@
+<?php
+// Start the session
+session_start();
+?>
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -83,7 +88,8 @@
         </div>
       </nav>
       <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade show active" id="nav-profs" role="tabpanel"></div>
+        <div class="tab-pane fade show active" id="nav-profs" role="tabpanel">
+        </div>
         <div class="tab-pane fade" id="nav-courses" role="tabpanel"></div>
         <div class="tab-pane fade" id="nav-users" role="tabpanel"></div>
       </div>
