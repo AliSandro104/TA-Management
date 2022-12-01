@@ -1,14 +1,8 @@
 <?php
 // Start the session
 session_start();
-<<<<<<< HEAD
-?>
-
-
-=======
 $id = $_SESSION["email"]
 ?>
->>>>>>> ali
 <!DOCTYPE html>
 <html>
   <head>
