@@ -9,7 +9,7 @@ $id = $_SESSION["email"]
 <!DOCTYPE html>
 <html>
   <head>
-    <title>XAMPP-Starter</title>
+    <title>Sysop Tasks</title>
     <link href="dashboard.css" rel="stylesheet" />
     <link rel="icon" href="../media/favicon.ico" type="image/ico">
     <link
@@ -143,8 +143,8 @@ if (array_key_exists("email", $_SESSION)) {
               alt="mcgill-logo"
             />
             <select class="custom-select">
-                <option hidden disabled selected value> -- select an option -- </option>
-                <option value="1" selected="selected"  >Student</option>
+            
+                <option value="1" selected="selected"  >Rate a TA </option>
 
                 <?php
 
@@ -169,21 +169,17 @@ if (array_key_exists("email", $_SESSION)) {
                           if ($row['MAX(userTypeId)'] == 5){
                             echo '<option value="2" selected="selected"  >TA management </option>';
                             echo '<option value="4" selected="selected"   >TA administration</option>';
-                            echo '<option value="5" selected="selected" >Sysop</option>';
-                            break;
+                            echo '<option value="5" selected="selected" >Sysop Tasks</option>';
                           }
               
                           if ($row['MAX(userTypeId)'] == 4){
                             echo '<option value="2" selected="selected" >TA management </option>';
                             echo '<option value="4" selected="selected" >TA administration</option>';
-                            break;}
+                          }
                           
                           if ($row['MAX(userTypeId)'] == 3 || $row['MAX(userTypeId)'] ==2) {
                             echo '<option value="2" selected="selected" >TA management </option>';
-                
-                            break;
-
-                    }
+                          }
                     }
                 }
 
