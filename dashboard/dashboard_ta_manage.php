@@ -6,6 +6,7 @@ $id = $_SESSION["email"]
 
 ?>
 
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -45,8 +46,7 @@ $id = $_SESSION["email"]
             window.location = "dashboard_sysop.php" 
             });
         });
-    </script>
-
+  </script>
 
   </head>
 
@@ -143,46 +143,52 @@ if (array_key_exists("email", $_SESSION)) {
               alt="mcgill-logo"
             />
             <select class="custom-select">
-            <option hidden disabled selected value> -- select an option -- </option>
-      <option value="1" selected="selected"  >Student</option>
+                <option hidden disabled selected value> -- select an option -- </option>
+                <option value="1" selected="selected"  >Student</option>
 
-      <?php
+                <?php
 
-      
-        $query = "SELECT MAX(userTypeId) FROM user_usertype WHERE userId = '$id'";
-        $query_run = mysqli_query($conn, $query);
+                    $conn = mysqli_connect("localhost","root","","ta-management");
 
+                    if ($conn -> connect_error){
+                    die ("Connection failed: " . $conn->connect_error);
+                    }
 
-        if(mysqli_num_rows($query_run) > 0)
-        {
-
-          //while ($row = mysqli_fetch_array($result)){
-            while ($row = $query_run->fetch_assoc()){
+                
+                    $query = "SELECT MAX(userTypeId) FROM user_usertype WHERE userId = '$id'";
+                    $query_run = mysqli_query($conn, $query);
               
               
-              if ($row['MAX(userTypeId)'] == 5){
-                echo '<option value="2" selected="selected"  >TA management </option>';
-                echo '<option value="4" selected="selected"   >TA administration</option>';
-                echo '<option value="5" selected="selected" >Sysop</option>';
-                break;
-              }
-
-              if ($row['MAX(userTypeId)'] == 4){
-                echo '<option value="2" selected="selected" >TA management </option>';
-                echo '<option value="4" selected="selected" >TA administration</option>';
-                break;}
+                    if(mysqli_num_rows($query_run) > 0)
+                    {
               
-              if ($row['MAX(userTypeId)'] == 3 || $row['MAX(userTypeId)'] ==2) {
-                echo '<option value="2" selected="selected" >TA management </option>';
+                      //while ($row = mysqli_fetch_array($result)){
+                        while ($row = $query_run->fetch_assoc()){
+                          
+                          
+                          if ($row['MAX(userTypeId)'] == 5){
+                            echo '<option value="2" selected="selected"  >TA management </option>';
+                            echo '<option value="4" selected="selected"   >TA administration</option>';
+                            echo '<option value="5" selected="selected" >Sysop</option>';
+                            break;
+                          }
+              
+                          if ($row['MAX(userTypeId)'] == 4){
+                            echo '<option value="2" selected="selected" >TA management </option>';
+                            echo '<option value="4" selected="selected" >TA administration</option>';
+                            break;}
+                          
+                          if ($row['MAX(userTypeId)'] == 3 || $row['MAX(userTypeId)'] ==2) {
+                            echo '<option value="2" selected="selected" >TA management </option>';
+                
+                            break;
 
-                break;
+                    }
+                    }
+                }
 
-          }
-        }
-      }
-
-      ?>
-      <option hidden disabled selected value> -- select an option -- </option>
+                ?>
+                <option hidden disabled selected value> -- select an option -- </option>
             </select>
           </div>
           <!-- Logout -->
