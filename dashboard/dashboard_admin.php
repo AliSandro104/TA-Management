@@ -44,6 +44,19 @@
       background-color: white;
       overflow: hidden;
     }
+
+    .change_color {
+      background-color: #ec1b2f;
+    }
+
+    .alert_text {
+      color: #ec1b2f;
+      font-weight: bold;
+    }
+
+    .fix_error_div {
+      margin-bottom: 20px;
+    }
   </style>
 
   <body>
