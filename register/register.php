@@ -28,15 +28,18 @@
 
     <div class="form-container" id="form1">
 
-        <form action="../cgi_bin/register_submit.php" method="post">
+        <form action="" method="post">
            <h3>register here</h3>
 
+           
            <?php
+           //print corresponding error message from register_submit.php
+            
             if(isset($error)){
                 foreach($error as $error){
                     echo '<span class="error-msg">'.$error.'</span>';
-                };
-            };
+                }
+            }
             ?>
 
            <input type="text" name="fname" required placeholder="first name">
@@ -118,46 +121,6 @@
 
             <label for="isProf">Professor</label></h4>
             
-
-            <div class="multiselect" id="Prof_courses" style="display:none">
-                <div class="selectBox" onclick="showProfCheckboxes()" >
-                    <select>
-                        <option>Select an option</option>
-                    </select>
-                    <div class="overSelect"></div>
-                </div>
-
-                <div id="Prof_checkboxes">
-                <?php
-                    $con = mysqli_connect("localhost","root","","ta-management");
-
-                    #distinct to avoid duplicates terms and year combinations
-                    $query = "SELECT DISTINCT courseNumber,term,year FROM course";
-                    $result = mysqli_query($con, $query);
-
-                    
-
-                    if(mysqli_num_rows($result) > 0){
-                        foreach($result as $r){
-                            $courseNum = $r['courseNumber'];
-                            $term = $r['term'];
-                            $year = $r['year'];
-                                ?>
-                                <input type="checkbox" name="studentCourses[]" value="<?= $courseNum . ' ' . $term . ' ' . $year ; ?>" /> 
-                                <?= $courseNum . ' ' . $term . ' ' . $year ; ?> <br/>
-                                <?php
-                        }
-                    }
-                    else
-                    {
-                    echo "No Record Found";
-                    }
-                ?>
-
-                </div>
-            </div>
-
-            
             
             <!--  ############ END professor section ############ -->
 
@@ -196,7 +159,7 @@
                             $term = $r['term'];
                             $year = $r['year'];
                                 ?>
-                                <input type="checkbox" name="studentCourses[]" value="<?= $courseNum . ' ' . $term . ' ' . $year ; ?>" /> 
+                                <input type="checkbox" name="taCourses[]" value="<?= $courseNum . ' ' . $term . ' ' . $year ; ?>" /> 
                                 <?= $courseNum . ' ' . $term . ' ' . $year ; ?> <br/>
                                 <?php
                         }
@@ -221,6 +184,11 @@
             <label for="isAdmin">TA Administrator</label></h4><br>
 
             <!--  ############ END TA admin section ############ -->
+
+                <div style="text-align:center">
+                    <input type="submit" name="submit" value="register now" class="form-btn">
+                    <p>already have an account? <a href="../login/login.html">login now</a></p>
+                </div>
         </form>
     
     </div>
@@ -231,4 +199,5 @@
 
 </body>
 </html>
+
 

@@ -119,3 +119,14 @@ function showTaCheckboxes() {
     Ta_expanded = false;
   }
 }
+
+
+function question1() {
+
+  var q1 = document.getElementById("test");
+  if (q1 == 32) {
+     window.alert("correct!");
+  } else {
+     window.alert("try again");
+  }
+}

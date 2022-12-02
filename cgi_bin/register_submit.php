@@ -1,12 +1,15 @@
 <?php
 
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
     $servername = "localhost";
     $username = "root";
     $db_password = "";
     $dbname = "ta-management";
 
     // Connect to database and check if successful
-    $con = mysqli_connect($servername, $username, $db_password, $dbname);
+    $conn = mysqli_connect($servername, $username, $db_password, $dbname);
 
 
     if(isset($_POST['submit'])){
@@ -18,87 +21,113 @@
         $cpassword= $_POST['cpassword'];
         $studentID = $_POST['sID'] ?? false;
         $userType = $_POST['BoxSelect'] ?? false;
-        $courses = $_POST['courseNum'] ?? false;
-        $term = $_POST['term'] ?? false;
+        $studentCourses = $_POST['StudentCourses'] ?? false;
+        $profCourses = $_POST['profCourses'] ?? false;
+        $taCourses = $_POST['taCourses'] ?? false;
 
         date_default_timezone_set('America/New_York');
         $time = date('y-m-d h:i:s');
 
-        if(!empty($fname) && !empty($lname) && !empty($email) && !empty($password)
-            && (!empty($userType)) && !empty($courses))
-            {
-                if($password != $cpassword){
-                    $error[] = 'passwords did not match!';
-                }
-
-                else{
-                //save to general user database
-                $query1 = "insert into user (firstName,lastName,email,password,createdAt,updatedAt) 
-                                    values ('$fname','$lname','$email', '$password','$time','$time')";
-
-                mysqli_query($con, $query1);
-
-                foreach($userType as $chkval){
-
-                    #add to professor table if user is a professor and update index in user_usertype
-                    if ($chkval == 'isProf'){
-                        
-                        #$query2= "insert into professor (professor) values ('$email')";
-                        #mysqli_query($con, $query2);
-
-                        $query2= "insert into user_usertype (userId, userTypeId) values ('$email',2)";
-                        mysqli_query($con, $query2);
-                    }
-                    
-                    #add to student table if user is a student and update index in user_usertype
-                    if ($chkval == 'isStudent'){
-                        $query3= "insert into students (email,studentID) values ('$email','$studentID')";
-                        mysqli_query($con, $query3);
-
-                        $query3= "insert into user_usertype (userId, userTypeId) values ('$email',1)";
-                        mysqli_query($con, $query3);}
-                    
-                    #if user is a ta update index in user_usertype
-                    if ($chkval == 'isTA'){
-
-                        $query4= "insert into user_usertype (userId, userTypeId) values ('$email',3)";
-                        mysqli_query($con, $query4);}
-                    
-                    #if user is admin update index in user_usertype
-                    if ($chkval == 'isAdmin'){
-
-                        $query5= "insert into user_usertype (userId, userTypeId) values ('$email',4)";
-                        mysqli_query($con, $query5);}
-                    
-                    }
-                
-                //#add list of courses to user_courses table
-                foreach($courses as $chkval){
-
-                    #add each course and email
-                    $query6= "insert into user_courses (email, courses) values ('$email','$chkval')";
-                    mysqli_query($con, $query6);
-                }
-
-                //#add correspong term and year to user
-                foreach($term as $chkval){
-                    #split the string into array
-                    $split = (explode(" ", $chkval));
-                    #add to term_year table
-                    $query7= "insert into term_year (email, term, year) values ('$email','$split[0]','$split[1]')";
-                    mysqli_query($con, $query7);
-                }
-
-                //redirect to login after successful register
-                header("Location: ../login/login.html");
-                die;}
-
-            }else
-            {
-
-                $error[] = 'Please fill all required fields!';
-            }
+        //check if account is duplicate
+        $query = "SELECT email FROM user WHERE email = '$email'";
+        $duplicate = mysqli_query($conn, $query);
+        if(mysqli_num_rows($duplicate) > 0){
+            $error[] = 'User already exists with this email!';
         }
 
+        //check if passwords match
+        elseif($password != $cpassword){
+            $error[] = 'Input passwords do not match!';
+        }
 
+        else{
+            //check if all required field are filled (without courses)
+            if(!empty($fname) && !empty($lname) && !empty($email) && !empty($password)
+                && (!empty($userType)))
+                {   
+                    //check if at least one course was chosen per usertype
+                    foreach($userType as $chkval){
+                        if ($chkval == 'isStudent'){
+                            if(empty($studentCourses)){
+                                $error[] = 'Please select at least 1 course per chosen usertype!';
+                            }
+                        }
+            
+                        if ($chkval == 'isTA'){
+                            if(empty($taCourses)){
+                                $error[] = 'Please select at least 1 course per chosen usertype!';
+                            }
+                        }
+                    
+                    //once all requirements are checked, add data to database
+
+                    //save to general user database once all requirements are checked
+                    $query = "insert into user (firstName,lastName,email,password,createdAt,updatedAt) values ('$fname','$lname','$email', '$password','$time','$time')";
+                    mysqli_query($conn, $query);
+                    
+                    //fill corresponding tables for each usertype
+                    foreach($userType as $chkval){
+
+                        #add student info to corresponding tables
+                        if ($chkval == 'isStudent'){
+                            
+                            //insert to user_usertype table
+                            $query1= "insert into user_usertype (userId, userTypeId) values ('$email',1)";
+                            mysqli_query($conn, $query1);
+
+                            //insert to all_student table
+                            foreach($studentCourses as $val){
+                                //split string of info
+                                $split = (explode(" ", $val));
+                                $course = $split[0] . ' '  .$split[1];
+                                $term = $split[2];
+                                $year = $split[3];
+                                $query1= "insert into all_students (email,studentID,courseNumber,term,year) values ('$email','$studentID','$course','$term','$year')";
+                                mysqli_query($conn, $query1);
+                            }
+                        }
+                        
+                        //add prof info to corresponding table
+                        if ($chkval == 'isProf'){
+                            
+                            //insert to user_usertype table
+                            $query2= "insert into user_usertype (userId, userTypeId) values ('$email',2)";
+                            mysqli_query($conn, $query2);
+                        }
+                        
+                        #add TA info to corresponding tables
+                        if ($chkval == 'isTA'){
+                            
+                            //insert to user_usertype table
+                            $query3= "insert into user_usertype (userId, userTypeId) values ('$email',3)";
+                            mysqli_query($conn, $query3);
+
+                            //insert to all_student table
+                            foreach($taCourses as $val){
+                                //split string of info
+                                $split = (explode(" ", $val));
+                                $course = $split[0] . ' '  .$split[1];
+                                $term = $split[2];
+                                $year = $split[3];
+                                $query3= "insert into all_ta (email,courseNumber,term,year) values ('$email','$course','$term','$year')";
+                                mysqli_query($conn, $query3);
+                            }
+                        }
+                        
+                        #if TA admin info to corresponding tables
+                        if ($chkval == 'isAdmin'){
+
+                            $query4= "insert into user_usertype (userId, userTypeId) values ('$email',4)";
+                            mysqli_query($conn, $query4);  
+                        }
+                    }
+                    //redirect to login after successful register
+                    header("Location: ../login/login.html");
+                    die;}
+                }else
+                {
+                    $error[] = 'Please fill all required fields!';
+                }
+        }
+    }
 ?>
