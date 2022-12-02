@@ -13,14 +13,14 @@ if ($conn->connect_error) {
 
 $email = $_POST['chosenTA'];
 $course = $_POST['chosenCourse'];
+$term_year = $_POST['term'];
 
-$result = mysqli_query($conn, "SELECT PositionsToAssign, TermYear FROM courses_quota WHERE CourseNumber = '$course'");
+$result = mysqli_query($conn, "SELECT PositionsToAssign, TermYear FROM courses_quota WHERE (CourseNumber = '$course' AND TermYear='$term_year')");
 $row_course = mysqli_fetch_assoc($result);
 $remaining_ta_positions_to_assign = $row_course['PositionsToAssign'] - 1;
-$term_year = $row_course['TermYear'];
 
 // update number of positions to assign
-$sql = "UPDATE courses_quota SET PositionsToAssign=$remaining_ta_positions_to_assign WHERE CourseNumber='$course'";
+$sql = "UPDATE courses_quota SET PositionsToAssign=$remaining_ta_positions_to_assign WHERE (CourseNumber = '$course' AND TermYear='$term_year')";
 mysqli_query($conn, $sql);
 
 

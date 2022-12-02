@@ -11,7 +11,6 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Missing a lot of error checks
 if(isset($_FILES['myfile'])){
     $file_content = file($_FILES['myfile']['tmp_name']);
     foreach($file_content as $row) {
@@ -34,6 +33,7 @@ if(isset($_FILES['myfile'])){
         $notes = $items[15];
 
         $result = $conn->query("SELECT * FROM ta_cohort WHERE (Email = '$email' AND TermYear='$course_term')");
+        $num = $result->num_rows;
         // if TA for a semester is not already in the database, insert it
         if ($result->num_rows==0) {
             $sql = $conn->prepare("INSERT INTO ta_cohort (TermYear, TAName, StudentID, 	LegalName, Email, GradUgrad, SupervisorName, Priority, NumberHours, DateApplied, TheLocation, Phone, Degree, CoursesApplied, OpenToOtherCourses, Notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
@@ -41,7 +41,7 @@ if(isset($_FILES['myfile'])){
             $result = $sql->execute();
         } else {
         // else, update the fields of that TA with the import
-            $sql = "UPDATE ta_cohort SET TermYear='$course_term', TAName='$ta_name', StudentID='$student_id', LegalName='$legal_name', GradUgrad='$grad_ugrad', SupervisorName='$supervisor_name', Priority='$priority', NumberHours=$hours, DateApplied='$date_applied', TheLocation='$location', Phone='$phone', Degree='$degree', CoursesApplied='$courses_applied', OpenToOtherCourses='$open_to_other_courses', Notes='$notes' WHERE Email='$email'";
+            $sql = "UPDATE ta_cohort SET TAName='$ta_name', StudentID='$student_id', LegalName='$legal_name', GradUgrad='$grad_ugrad', SupervisorName='$supervisor_name', Priority='$priority', NumberHours=$hours, DateApplied='$date_applied', TheLocation='$location', Phone='$phone', Degree='$degree', CoursesApplied='$courses_applied', OpenToOtherCourses='$open_to_other_courses', Notes='$notes' WHERE (Email='$email' AND TermYear='$course_term')";
             mysqli_query($conn, $sql);
         }
     }

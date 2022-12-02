@@ -335,9 +335,12 @@ $id = $_SESSION["email"]
                 while($row = mysqli_fetch_array($result)) {
             ?>
                 <!-- Get the info from the courses_quota database -->
-                <button class="accordion"><?php echo $row['CourseNumber']?> <?php echo " - " . $row['TermYear'] ?></button>
+                <button class="accordion"><?php echo $row['CourseNumber']?></button>
                 <div class="panel" style="margin-top: 20px;">
-                <p><b>Term Year: </b><span><?php echo $row['TermYear']?><span></p>
+                <p>
+                  <b>Term Year: </b>
+                  <span><?php echo $row['TermYear']?></span>
+                </p>
                 <p><b>Course Name: </b><?php echo $row['CourseName']?></p>
                 <p><b>Course Type: </b><?php echo $row['CourseType']?></p>
                 <p><b>Instructor Name: </b><?php echo $row['InstructorName']?></p>
@@ -364,7 +367,9 @@ $id = $_SESSION["email"]
             <form action="../cgi_bin/add_ta_to_course.php" method="post">
                 <?php
                 $term_year = $row['TermYear'];
-                $result2 = $conn -> query("SELECT Email FROM ta_cohort WHERE TermYear = '$term_year' AND TAName NOT IN (SELECT TAName from ta_assigned WHERE TermYear = '$term_year')"); ?>
+                ?>
+                <input style="display: none;" type="text" name="term" value="<?php echo $term_year; ?>">
+                <?php $result2 = $conn -> query("SELECT Email FROM ta_cohort WHERE TermYear = '$term_year' AND TAName NOT IN (SELECT TAName from ta_assigned WHERE TermYear = '$term_year')"); ?>
                 <i>Choose a TA to add:</i>
                 <select name="chosenTA">
             <?php
@@ -395,7 +400,38 @@ $id = $_SESSION["email"]
                 <input style="cursor: pointer;" type="submit">
               </form> 
               </div>
-              <?php } ?>   
+              <?php } ?> 
+              
+              <?php
+                // Create connection
+                $conn = new mysqli("localhost", "root", "", "ta-management");
+                // Check connection
+                if ($conn->connect_error) {
+                    die("Connection failed: " . $conn->connect_error);
+                }
+                $result4 = $conn -> query("SELECT * FROM ta_assigned ORDER BY TermYear"); 
+              ?>
+              <!-- Remove TA from a course they have been assigned to-->
+            <div>
+            <h1 style="margin: 50px 0px 20px 0px;">Remove a TA from a course</h1>
+            <form action="../cgi_bin/remove_ta_from_course.php" method="post">
+              <p></p>
+              <i>Choose which TA to remove: </i>
+              <select name="chosenID">
+            <?php
+                while($row4 = mysqli_fetch_array($result4)) {
+            ?>   
+                  <option value="<?php echo $row4['AssignID']; ?>">
+                  <?php echo $row4['TAEmail'] . " from " . $row4['CourseNum'] . " in " . $row4['TermYear']; ?>
+                  </option>
+                  <?php
+                }
+                ?>
+                </select>
+                <p></p>
+                <input style="cursor: pointer;" type="submit">
+              </form> 
+              </div>  
         </div>
       </div>
     </div>

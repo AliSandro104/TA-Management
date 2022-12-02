@@ -36,9 +36,9 @@ if(isset($_FILES['myfile'])){
             $result = $sql->execute();
         } else {
             // else, update the fields of that course with the import
-            $row = mysqli_fetch_row($result);
+            $row = mysqli_fetch_assoc($result);
             $remaining_ta_positions_to_assign = $ta_quota - ($row['TAQuota'] - $row['PositionsToAssign']);
-            $sql = "UPDATE courses_quota SET TermYear='$course_term', CourseName='$course_name',  CourseType='$course_type', InstructorName='$instructor_name', EnrollmentNumber=$enrollment_number, TAQuota=$ta_quota, PositionsToAssign=$remaining_ta_positions_to_assign WHERE CourseNumber='$course_number'";
+            $sql = "UPDATE courses_quota SET CourseName='$course_name',  CourseType='$course_type', InstructorName='$instructor_name', EnrollmentNumber=$enrollment_number, TAQuota=$ta_quota, PositionsToAssign=$remaining_ta_positions_to_assign WHERE (CourseNumber='$course_number' AND TermYear='$course_term')";
             mysqli_query($conn, $sql);
         }
     }
