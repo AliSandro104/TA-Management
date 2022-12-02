@@ -19,7 +19,7 @@ $row_course = mysqli_fetch_assoc($result);
 $remaining_ta_positions_to_assign = $row_course['PositionsToAssign'] - 1;
 $term_year = $row_course['TermYear'];
 
-// update number of positiosn to assign
+// update number of positions to assign
 $sql = "UPDATE courses_quota SET PositionsToAssign=$remaining_ta_positions_to_assign WHERE CourseNumber='$course'";
 mysqli_query($conn, $sql);
 

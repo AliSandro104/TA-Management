@@ -33,13 +33,14 @@ if(isset($_FILES['myfile'])){
         $open_to_other_courses = $items[14];
         $notes = $items[15];
 
-        $result = $conn->query("SELECT * FROM ta_cohort WHERE Email = '$email'");
-
+        $result = $conn->query("SELECT * FROM ta_cohort WHERE (Email = '$email' AND TermYear='$course_term')");
+        // if TA for a semester is not already in the database, insert it
         if ($result->num_rows==0) {
             $sql = $conn->prepare("INSERT INTO ta_cohort (TermYear, TAName, StudentID, 	LegalName, Email, GradUgrad, SupervisorName, Priority, NumberHours, DateApplied, TheLocation, Phone, Degree, CoursesApplied, OpenToOtherCourses, Notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             $sql->bind_param('ssisssssississss', $course_term, $ta_name, $student_id, $legal_name, $email, $grad_ugrad, $supervisor_name, $priority, $hours, $date_applied, $location, $phone, $degree, $courses_applied, $open_to_other_courses, $notes);
             $result = $sql->execute();
         } else {
+        // else, update the fields of that TA with the import
             $sql = "UPDATE ta_cohort SET TermYear='$course_term', TAName='$ta_name', StudentID='$student_id', LegalName='$legal_name', GradUgrad='$grad_ugrad', SupervisorName='$supervisor_name', Priority='$priority', NumberHours=$hours, DateApplied='$date_applied', TheLocation='$location', Phone='$phone', Degree='$degree', CoursesApplied='$courses_applied', OpenToOtherCourses='$open_to_other_courses', Notes='$notes' WHERE Email='$email'";
             mysqli_query($conn, $sql);
         }

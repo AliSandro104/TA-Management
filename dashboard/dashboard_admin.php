@@ -21,6 +21,7 @@ $id = $_SESSION["email"]
     />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <!-- script to redirect the user to the appropriate page -->
     <script>
       jQuery(function($) {
       $('select').on('change', function() {
@@ -110,6 +111,7 @@ $id = $_SESSION["email"]
               style="width: 14rem; height: auto"
               alt="mcgill-logo"
             />
+            <!-- code to show the user which webpages they have access to -->
             <select class="custom-select">
               <option value="1" selected="selected"  >Rate a TA</option>
               
@@ -163,6 +165,7 @@ $id = $_SESSION["email"]
         </div>
       </nav>
       <nav>
+        <!-- Show the nagivation options on the webpage -->
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
           <a
             class="nav-item nav-link active"
@@ -235,6 +238,7 @@ $id = $_SESSION["email"]
             </div>
           </div>
         </div>
+          <!-- View the TA info on this page -->
           <h1 style="margin-top: 20px;">Click on a TA to view their info</h1>
           <?php
             // Create connection
@@ -243,12 +247,12 @@ $id = $_SESSION["email"]
             if ($conn->connect_error) {
                 die("Connection failed: " . $conn->connect_error);
             }
-            $result = $conn -> query("SELECT * FROM ta_cohort");
+            $result = $conn -> query("SELECT * FROM ta_cohort ORDER BY TermYear");
               while($row = mysqli_fetch_array($result)) {
           ?>
-            <button class="accordion"><?php echo $row['TAName']?></button>
+            <!-- Get the info from the ta_cohort database -->
+            <button class="accordion"><?php echo $row['TAName']?> <?php echo " - " . $row['TermYear'] ?></button>
             <div class="panel" style="margin-top: 20px;">
-              <p><b>Semester of application: </b><?php echo $row['TermYear']?></p>
               <p><b>Legal name: </b><?php echo $row['LegalName']?></p>
               <p><b>Student ID: </b><?php echo $row['StudentID']?></p>
               <p><b>Email: </b><?php echo $row['Email']?></p>
@@ -269,6 +273,7 @@ $id = $_SESSION["email"]
           ?>
         </div>
         <div class="tab-pane fade" id="nav-ta-history" role="tabpanel">
+          <!-- View the TA history on this page -->
         <h1 style="margin-top: 20px;">Click on a TA to view their history</h1>
         </div>
         <div class="tab-pane fade" id="nav-courses" role="tabpanel">
@@ -317,6 +322,7 @@ $id = $_SESSION["email"]
             </div>
           </div>
         </div>
+            <!-- View the list of courses on this page -->
             <h1 style="margin-top: 20px;">List of courses</h1>
             <?php
                 // Create connection
@@ -325,12 +331,13 @@ $id = $_SESSION["email"]
                 if ($conn->connect_error) {
                     die("Connection failed: " . $conn->connect_error);
                 }
-                $result = $conn -> query("SELECT * FROM courses_quota");
+                $result = $conn -> query("SELECT * FROM courses_quota ORDER BY TermYear");
                 while($row = mysqli_fetch_array($result)) {
             ?>
-                <button class="accordion"><?php echo $row['CourseNumber']?></button>
+                <!-- Get the info from the courses_quota database -->
+                <button class="accordion"><?php echo $row['CourseNumber']?> <?php echo " - " . $row['TermYear'] ?></button>
                 <div class="panel" style="margin-top: 20px;">
-                <p><b>Term Year: </b><?php echo $row['TermYear']?></p>
+                <p><b>Term Year: </b><span><?php echo $row['TermYear']?><span></p>
                 <p><b>Course Name: </b><?php echo $row['CourseName']?></p>
                 <p><b>Course Type: </b><?php echo $row['CourseType']?></p>
                 <p><b>Instructor Name: </b><?php echo $row['InstructorName']?></p>
@@ -341,8 +348,6 @@ $id = $_SESSION["email"]
             <?php
                 }
             ?>
-            <h1 style="margin: 50px 0px 20px 0px;">Add TA to a course</h1>
-            <form action="../cgi_bin/add_ta_to_course.php" method="post">
             <?php
                 // Create connection
                 $conn = new mysqli("localhost", "root", "", "ta-management");
@@ -350,28 +355,37 @@ $id = $_SESSION["email"]
                 if ($conn->connect_error) {
                     die("Connection failed: " . $conn->connect_error);
                 }
-                $result = $conn -> query("SELECT Email FROM ta_cohort WHERE TAName NOT IN (SELECT TAName from ta_assigned)"); ?>
+                $result1 = $conn -> query("SELECT DISTINCT TermYear FROM courses_quota ORDER BY TermYear"); 
+                while($row = mysqli_fetch_array($result1)) {
+              ?>
+              <!-- Add TA to a course feature for each unique semester-->
+            <div>
+            <h1 style="margin: 50px 0px 20px 0px;">Add TA to a course in <?php echo $row['TermYear'];?> </h1>
+            <form action="../cgi_bin/add_ta_to_course.php" method="post">
+                <?php
+                $term_year = $row['TermYear'];
+                $result2 = $conn -> query("SELECT Email FROM ta_cohort WHERE TermYear = '$term_year' AND TAName NOT IN (SELECT TAName from ta_assigned WHERE TermYear = '$term_year')"); ?>
                 <i>Choose a TA to add:</i>
                 <select name="chosenTA">
             <?php
-                while($row = mysqli_fetch_array($result)) {
+                while($row2 = mysqli_fetch_array($result2)) {
             ?>   
-                  <option value="<?php echo $row['Email']; ?>">
-                  <?php echo $row['Email']; ?>
+                  <option value="<?php echo $row2['Email']; ?>">
+                  <?php echo $row2['Email']; ?>
                   </option>
                   <?php
                 }
                 ?>
                 </select>
-                <?php $result = $conn -> query("SELECT CourseNumber FROM courses_quota WHERE PositionsToAssign > 0"); ?>
+                <?php $result3 = $conn -> query("SELECT CourseNumber FROM courses_quota WHERE (TermYear = '$term_year' AND PositionsToAssign > 0)"); ?>
                 <p></p>
                 <i>Choose a course for the TA:</i>
                 <select name="chosenCourse">
             <?php
-                while($row = mysqli_fetch_array($result)) {
+                while($row3 = mysqli_fetch_array($result3)) {
             ?>   
-                  <option value="<?php echo $row['CourseNumber']; ?>">
-                  <?php echo $row['CourseNumber']; ?>
+                  <option value="<?php echo $row3['CourseNumber']; ?>">
+                  <?php echo $row3['CourseNumber']; ?>
                   </option>
                   <?php
                 }
@@ -379,7 +393,9 @@ $id = $_SESSION["email"]
                 </select>
                 <p></p>
                 <input style="cursor: pointer;" type="submit">
-              </form>    
+              </form> 
+              </div>
+              <?php } ?>   
         </div>
       </div>
     </div>

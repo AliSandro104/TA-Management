@@ -43,7 +43,8 @@ for (i = 0; i < quotas.length; i++) {
     var input_quota = document.createElement("input");
     var input_submit = document.createElement("input");
     var input_course = document.createElement("input");
-    
+    var input_term = document.createElement("input");
+
     input_enroll.type = "number";
     input_enroll.name = "enroll";
 
@@ -57,6 +58,11 @@ for (i = 0; i < quotas.length; i++) {
     input_course.name = "course";
     input_course.value = prev.innerHTML;
     input_course.style.display = "none";
+
+    input_term.type = "text";
+    input_term.name = "term";
+    input_term.value = parentDiv.children[1].innerHTML;
+    input_term.style.display = "none";
 
     var div1 = document.createElement("div");
     var div2 = document.createElement("div");
