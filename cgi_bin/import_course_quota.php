@@ -17,16 +17,30 @@ if(isset($_FILES['myfile'])){
     foreach($file_content as $row) {
         $items = explode(",", trim($row));
         $course_term = $items[0];
-        $course_number = $items[1];
+        $course_number = strtoupper($items[1]);
+
+        if (mb_substr($course_number, 4,1) != " ") {
+            $course_number = substr_replace($course_number, " ", 4, 0);
+        }
         $course_name = $items[2];
         $course_type = $items[3];
         $instructor_name = $items[4];
         $enrollment_number = $items[5];
         $ta_quota = $items[6];
-        
-        $sql = $conn->prepare("INSERT INTO courses_quota (TermYear, CourseNumber, CourseName, CourseType, InstructorName, EnrollmentNumber, TAQuota) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $sql->bind_param('sssssii', $course_term, $course_number, $course_name, $course_type, $instructor_name, $enrollment_number, $ta_quota);
-        $result = $sql->execute();
+
+        $result = $conn->query("SELECT * FROM courses_quota WHERE CourseNumber = '$course_number'");
+
+        if ($result->num_rows==0) {
+            $remaining_ta_positions_to_assign = $items[6];
+            $sql = $conn->prepare("INSERT INTO courses_quota (TermYear, CourseNumber, CourseName, CourseType, InstructorName, EnrollmentNumber, TAQuota, PositionsToAssign) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            $sql->bind_param('sssssiii', $course_term, $course_number, $course_name, $course_type, $instructor_name, $enrollment_number, $ta_quota, $remaining_ta_positions_to_assign);
+            $result = $sql->execute();
+        } else {
+            $row = mysqli_fetch_row($result);
+            $remaining_ta_positions_to_assign = $ta_quota - ($row['TAQuota'] - $row['PositionsToAssign']);
+            $sql = "UPDATE courses_quota SET TermYear='$course_term', CourseName='$course_name',  CourseType='$course_type', InstructorName='$instructor_name', EnrollmentNumber=$enrollment_number, TAQuota=$ta_quota, PositionsToAssign=$remaining_ta_positions_to_assign WHERE CourseNumber='$course_number'";
+            mysqli_query($conn, $sql);
+        }
     }
 }
 $conn->close();

@@ -167,9 +167,16 @@ $id = $_SESSION["email"]
           <a
             class="nav-item nav-link active"
             data-toggle="tab"
-            href="#nav-tas"
+            href="#nav-ta-info"
             role="tab"
-            >TA Info/History</a
+            >TA Info</a
+          >
+          <a
+            class="nav-item nav-link"
+            data-toggle="tab"
+            href="#nav-ta-history"
+            role="tab"
+            >TA History</a
           >
           <a
             class="nav-item nav-link"
@@ -181,7 +188,7 @@ $id = $_SESSION["email"]
         </div>
       </nav>
       <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade show active" id="nav-tas" role="tabpanel">
+        <div class="tab-pane fade show active" id="nav-ta-info" role="tabpanel">
             <!-- Import TA cohort -->
           <button
           type="button"
@@ -228,7 +235,7 @@ $id = $_SESSION["email"]
             </div>
           </div>
         </div>
-          <h1 style="margin-top: 20px;">List of TA with their info</h1>
+          <h1 style="margin-top: 20px;">Click on a TA to view their info</h1>
           <?php
             // Create connection
             $conn = new mysqli("localhost", "root", "", "ta-management");
@@ -260,6 +267,9 @@ $id = $_SESSION["email"]
           <?php
             }
           ?>
+        </div>
+        <div class="tab-pane fade" id="nav-ta-history" role="tabpanel">
+        <h1 style="margin-top: 20px;">Click on a TA to view their history</h1>
         </div>
         <div class="tab-pane fade" id="nav-courses" role="tabpanel">
             <button
@@ -326,10 +336,50 @@ $id = $_SESSION["email"]
                 <p><b>Instructor Name: </b><?php echo $row['InstructorName']?></p>
                 <p><b>Enrollment Number: </b><b style="font-weight: normal;" class="enrollment-number"><?php echo $row['EnrollmentNumber']?></b></p>
                 <p><b>TA Quota: </b><b style="font-weight: normal;" class="ta-quota"><?php echo $row['TAQuota']?></b></p>
-                </div>
+                <p><b>Remaining TA positions to assign: </b><b style="font-weight: normal;"><?php echo $row['PositionsToAssign']?></b></p>
+                </div>       
             <?php
                 }
             ?>
+            <h1 style="margin: 50px 0px 20px 0px;">Add TA to a course</h1>
+            <form action="../cgi_bin/add_ta_to_course.php" method="post">
+            <?php
+                // Create connection
+                $conn = new mysqli("localhost", "root", "", "ta-management");
+                // Check connection
+                if ($conn->connect_error) {
+                    die("Connection failed: " . $conn->connect_error);
+                }
+                $result = $conn -> query("SELECT Email FROM ta_cohort WHERE TAName NOT IN (SELECT TAName from ta_assigned)"); ?>
+                <i>Choose a TA to add:</i>
+                <select name="chosenTA">
+            <?php
+                while($row = mysqli_fetch_array($result)) {
+            ?>   
+                  <option value="<?php echo $row['Email']; ?>">
+                  <?php echo $row['Email']; ?>
+                  </option>
+                  <?php
+                }
+                ?>
+                </select>
+                <?php $result = $conn -> query("SELECT CourseNumber FROM courses_quota WHERE PositionsToAssign > 0"); ?>
+                <p></p>
+                <i>Choose a course for the TA:</i>
+                <select name="chosenCourse">
+            <?php
+                while($row = mysqli_fetch_array($result)) {
+            ?>   
+                  <option value="<?php echo $row['CourseNumber']; ?>">
+                  <?php echo $row['CourseNumber']; ?>
+                  </option>
+                  <?php
+                }
+                ?>
+                </select>
+                <p></p>
+                <input style="cursor: pointer;" type="submit">
+              </form>    
         </div>
       </div>
     </div>
