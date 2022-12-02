@@ -25,7 +25,7 @@ mysqli_query($conn, $sql);
 
 
 // get the TA info needed for the new databases
-$result2 = $conn->query("SELECT * FROM ta_cohort WHERE Email = '$email'");
+$result2 = $conn->query("SELECT * FROM ta_cohort WHERE (Email = '$email' AND TermYear='$term_year')");
 $row_ta = mysqli_fetch_assoc($result2);
 $studentID = $row_ta['StudentID'];
 $assigned_hours = $row_ta['NumberHours'];
