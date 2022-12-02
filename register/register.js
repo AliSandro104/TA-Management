@@ -8,7 +8,7 @@ function displayStudentID() {
     var field = document.getElementById("sID");
 
     // If the checkbox is checked, display the student ID field and make it required
-    if (checkBox.checked == true){
+    if (checkBox.checked){
         field.style.display = "initial";
         field.required = true;
       
@@ -28,7 +28,7 @@ function displayStudentCourses() {
     var courses = document.getElementById("Student_courses");
 
     // If the checkbox is checked, display the student ID field and make it required
-    if (checkBox.checked == true){
+    if (checkBox.checked){
         courses.style.display = "initial";
       
     } else {
@@ -121,12 +121,33 @@ function showTaCheckboxes() {
 }
 
 
-function question1() {
+var checkForm = function () {
 
-  var q1 = document.getElementById("test");
-  if (q1 == 32) {
-     window.alert("correct!");
-  } else {
-     window.alert("try again");
+  var errors = [];
+  var pass= document.getElementById('pass');
+  var cpass = document.getElementById('cpass');
+  var isStudent = document.getElementById('isStudent');
+  var isTA = document.getElementById('isStudent');
+
+
+
+  //check if at least one user type is selected
+  if(pass!=cpass){
+    errors.push("Passwords do not match");
   }
+
+  //check if at least one user type is selected
+  if(!$('#BoxSelect input[type="checkbox"]').is(':checked')){
+    errors.push("Please select at least one user type!");
+  }
+ 
+  //check if student option is selected and at least 1 course is selected
+  if(isStudent && (!$('#StudentCourses input[type="checkbox"]').is(':checked')))
+    errors.push("Student must choose at least 1 course");
+
+  //check if ta option is selected and at least 1 course is selected
+  if(isTA && (!$('#taCourses input[type="checkbox"]').is(':checked')))
+    errors.push("Teacher Assistant must choose at least 1 course");
+  
+  alert(errors.join('\n'));
 }
