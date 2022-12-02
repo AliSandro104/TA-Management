@@ -14,9 +14,6 @@
 
 <?php
 
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
     $servername = "localhost";
     $username = "root";
     $db_password = "";
@@ -145,7 +142,6 @@
 
 
 
-
 <body style="background-color:#eee;">
     <div class="header-background">
         <div class = "logo"> </div>
@@ -188,7 +184,7 @@
             <div class="multiselect" id="Student_courses" style="display:none">
                 <div class="selectBox" onclick="showStudentCheckboxes()" >
                     <select>
-                        <option>Select an option</option>
+                        <option>Select at least one*</option>
                     </select>
                     <div class="overSelect"></div>
                 </div>
@@ -241,7 +237,7 @@
             <div class="multiselect" id="Ta_courses" style="display:none">
                 <div class="selectBox" onclick="showTaCheckboxes()" >
                     <select>
-                        <option>Select an option</option>
+                        <option>Select an at least one*</option>
                     </select>
                     <div class="overSelect"></div>
                 </div>

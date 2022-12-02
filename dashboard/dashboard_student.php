@@ -10,6 +10,9 @@ $id = $_SESSION["email"]
 <html>
   <head>
     <title>Rate a TA</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link href="dashboard.css" rel="stylesheet" />
     <link rel="icon" href="../media/favicon.ico" type="image/ico">
     <link
@@ -23,9 +26,9 @@ $id = $_SESSION["email"]
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
 
     />
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <link rel="stylesheet" href="dashboard_student.css">
+    <script type="text/javascript" src="./dashboard_student.js"></script>
+    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script>
         jQuery(function($) {
@@ -120,7 +123,7 @@ $id = $_SESSION["email"]
                 }
 
                 ?>
-                <option hidden disabled selected value> -- select an option -- </option>
+                <option hidden disabled selected value> -- change page -- </option>
             </select>
           </div>
           <!-- Logout -->
@@ -135,45 +138,142 @@ $id = $_SESSION["email"]
           </div>
         </div>
       </nav>
-      <nav>
-        <div class="nav nav-tabs" id="nav-tab" role="tablist">
-          <a
-            class="nav-item nav-link active"
-            data-toggle="tab"
-            href="#nav-profs"
-            role="tab"
-            >Professors</a
-          >
-          <a
-            class="nav-item nav-link"
-            data-toggle="tab"
-            href="#nav-courses"
-            role="tab"
-            >Courses</a
-          >
-          <a
-            class="nav-item nav-link"
-            data-toggle="tab"
-            href="#nav-users"
-            role="tab"
-            >Users</a
-          >
-        </div>
-      </nav>
-      <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade show active" id="nav-profs" role="tabpanel">
-        </div>
-        <div class="tab-pane fade" id="nav-courses" role="tabpanel"></div>
-        <div class="tab-pane fade" id="nav-users" role="tabpanel"></div>
+      
+      <br><br>
+      
+      <div class="form-container" id="form1">
+        <form action="" method="post">
+          <h1> Rate your TA </h1>
+
+          <br><br>
+
+          <!-- SELECT YEAR -->
+                  
+          <label for ="year"> Select academic year: </label>
+              
+            <select name="year" id="year">
+              <option hidden disabled selected value = "N/A"> -- Year -- </option>
+
+              <?php
+                        $con = mysqli_connect("localhost","root","","ta-management");
+                        #distinct to avoid duplicates terms and year combinations
+                        $query = "SELECT DISTINCT year FROM course";
+                        $result = mysqli_query($con, $query);
+                        
+                        if(mysqli_num_rows($result) > 0){
+                            foreach($result as $r){
+                                $year = $r['year'];
+                                    echo "<option value= '$year' /> $year <br/>";
+                            }
+                        }
+                        else
+                        {
+                        echo "No Record Found";
+                        }
+                    ?>
+              
+            </select>
+            <br><br>
+
+
+            <!-- SELECT TERM -->
+        
+            <label for ="term"> Select academic term: </label>
+              
+            <select name="term" id="term">
+              <option hidden disabled selected value= "N/A"> -- Term -- </option>
+
+              <?php
+                        $con = mysqli_connect("localhost","root","","ta-management");
+                        #distinct to avoid duplicates terms and year combinations
+                        $query = "SELECT DISTINCT term FROM course";
+                        $result = mysqli_query($con, $query);
+                        
+                        if(mysqli_num_rows($result) > 0){
+                            foreach($result as $r){
+                                $term = $r['term'];
+                                    echo "<option value= '$term' /> $term <br/>";
+                            }
+                        }
+                        else
+                        {
+                        echo "No Record Found";
+                        }
+                    ?>
+              
+            </select>
+            <br><br>
+
+            <!-- SELECT COURSES -->
+        
+            <label for ="course"> Select a course: </label>
+              
+            <select name="course" id="course">
+              <option hidden disabled selected value="N/A"> -- Course -- </option>
+
+              <?php
+                        $con = mysqli_connect("localhost","root","","ta-management");
+                        #distinct to avoid duplicates terms and year combinations
+                        $query = "SELECT DISTINCT courseNumber FROM course";
+                        $result = mysqli_query($con, $query);
+                        
+                        if(mysqli_num_rows($result) > 0){
+                            foreach($result as $r){
+                                $course = $r['courseNumber'];
+                                    echo "<option value= '$course' /> $course <br/>";
+                            }
+                        }
+                        else
+                        {
+                        echo "No Record Found";
+                        }
+                    ?>
+              
+            </select>
+            <br><br>
+
+
+            <button type="button" class ="confirm-btn" id="confirm-btn" onclick="displayTaList()">Confirm selection</button> <br><br>
+
+            <!-- SELECT TA -->
+            
+            <div id="ta-select" style="display:none">
+            <label for ="ta"><h4> Select the TA you would like to rate: </h4></label><br>
+              
+            <select name="ta" id="ta">
+              <option hidden disabled selected value="N/A"> -- TA -- </option>
+
+              <?php
+                        $con = mysqli_connect("localhost","root","","ta-management");
+                        #distinct to avoid duplicates terms and year combinations
+                        $query = "SELECT DISTINCT year FROM course";
+                        $result = mysqli_query($con, $query);
+                        
+                        if(mysqli_num_rows($result) > 0){
+                            foreach($result as $r){
+                                $year = $r['year'];
+                                    echo "<option value= '$year' /> $year <br/>";
+                            }
+                        }
+                        else
+                        {
+                        echo "No Record Found";
+                        }
+                    ?>
+              
+            </select>
+
+            <div id="ta-select">
+            <br><br>
+
+                        
+
+        </form>
       </div>
-    </div>
-    <script>
-      function loadExistingData() {
-        getProfAccounts();
-        getCourses();
-        getAccounts();
-      }
-      document.onload = loadExistingData();
-    </script>
+      
+
+        <div class="footer">.</div> 
+
   </body>
+
 </html>
