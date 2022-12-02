@@ -43,7 +43,7 @@
 
            <input type="text" name="lname" required placeholder="last name">
 
-           <input type="email" name="email" required placeholder="email (example@example.com)" multiple>
+           <input type="email" name="email" required placeholder="email (you@example.com)" multiple>
 
            <input type="password" name="password" required placeholder="password"> 
 
@@ -54,98 +54,178 @@
             <br>
             <br>
             
+            <!--  ############ START student section ############ -->
+
             <div style = "text-align:left"> 
-            <h4> Select at least ONE user type:</h4>
-            <input
+            <h2> Select at least ONE user type:</h2>
+
+            <h4><input
                type="checkbox"
                name="BoxSelect[]"
                value="isStudent"
                id= "isStudent"
-               onclick="displayStudentID()"/>
-            <label for="isStudent">Student</label> <br>
+               onclick="displayStudentID(), displayStudentCourses()"/>
+            
+            <label for="isStudent">Student</label></h4>
+            
+            <div class="multiselect" id="Student_courses" style="display:none">
+                <div class="selectBox" onclick="showStudentCheckboxes()" >
+                    <select>
+                        <option>Select an option</option>
+                    </select>
+                    <div class="overSelect"></div>
+                </div>
 
-            <input
+                <div id="Student_checkboxes">
+                <?php
+                    $con = mysqli_connect("localhost","root","","ta-management");
+
+                    #distinct to avoid duplicates terms and year combinations
+                    $query = "SELECT DISTINCT courseNumber,term,year FROM course";
+                    $result = mysqli_query($con, $query);
+
+                    
+
+                    if(mysqli_num_rows($result) > 0){
+                        foreach($result as $r){
+                            $courseNum = $r['courseNumber'];
+                            $term = $r['term'];
+                            $year = $r['year'];
+                                ?>
+                                <input type="checkbox" name="studentCourses[]" value="<?= $courseNum . ' ' . $term . ' ' . $year ; ?>" /> 
+                                <?= $courseNum . ' ' . $term . ' ' . $year ; ?> <br/>
+                                <?php
+                        }
+                    }
+                    else
+                    {
+                    echo "No Record Found";
+                    }
+                ?>
+
+                </div>
+            </div>
+
+            <!--  ############ END student section ############ -->
+
+            <!--  ############ START professor section ############ -->
+            <h4><input
             type="checkbox"
             name="BoxSelect[]"
-            value="isProf"/>
-            <label for="isProf">Professor</label><br>
-      
-            <input
+            value="isProf"
+            id= "isProf"
+            onclick="displayProfCourses()"/>
+
+            <label for="isProf">Professor</label></h4>
+            
+
+            <div class="multiselect" id="Prof_courses" style="display:none">
+                <div class="selectBox" onclick="showProfCheckboxes()" >
+                    <select>
+                        <option>Select an option</option>
+                    </select>
+                    <div class="overSelect"></div>
+                </div>
+
+                <div id="Prof_checkboxes">
+                <?php
+                    $con = mysqli_connect("localhost","root","","ta-management");
+
+                    #distinct to avoid duplicates terms and year combinations
+                    $query = "SELECT DISTINCT courseNumber,term,year FROM course";
+                    $result = mysqli_query($con, $query);
+
+                    
+
+                    if(mysqli_num_rows($result) > 0){
+                        foreach($result as $r){
+                            $courseNum = $r['courseNumber'];
+                            $term = $r['term'];
+                            $year = $r['year'];
+                                ?>
+                                <input type="checkbox" name="studentCourses[]" value="<?= $courseNum . ' ' . $term . ' ' . $year ; ?>" /> 
+                                <?= $courseNum . ' ' . $term . ' ' . $year ; ?> <br/>
+                                <?php
+                        }
+                    }
+                    else
+                    {
+                    echo "No Record Found";
+                    }
+                ?>
+
+                </div>
+            </div>
+
+            
+            
+            <!--  ############ END professor section ############ -->
+
+            <!--  ############ START TA section ############ -->
+            <h4><input
             type="checkbox"
             name="BoxSelect[]"
-            value="isTA"/>
-            <label for="isTA">Teaching Assistant</label><br>
+            value="isTA"
+            id= "isTA"
+            onclick="displayTaCourses()"/>
 
-            <input
+            <label for="isTA">Teacher Assistant</label></h4>
+            
+
+            <div class="multiselect" id="Ta_courses" style="display:none">
+                <div class="selectBox" onclick="showTaCheckboxes()" >
+                    <select>
+                        <option>Select an option</option>
+                    </select>
+                    <div class="overSelect"></div>
+                </div>
+
+                <div id="Ta_checkboxes">
+                <?php
+                    $con = mysqli_connect("localhost","root","","ta-management");
+
+                    #distinct to avoid duplicates terms and year combinations
+                    $query = "SELECT DISTINCT courseNumber,term,year FROM course";
+                    $result = mysqli_query($con, $query);
+
+                    
+
+                    if(mysqli_num_rows($result) > 0){
+                        foreach($result as $r){
+                            $courseNum = $r['courseNumber'];
+                            $term = $r['term'];
+                            $year = $r['year'];
+                                ?>
+                                <input type="checkbox" name="studentCourses[]" value="<?= $courseNum . ' ' . $term . ' ' . $year ; ?>" /> 
+                                <?= $courseNum . ' ' . $term . ' ' . $year ; ?> <br/>
+                                <?php
+                        }
+                    }
+                    else
+                    {
+                    echo "No Record Found";
+                    }
+                ?>
+
+                </div>
+            </div>
+
+            <!--  ############ END TA section ############ -->
+
+            <!--  ############ START TA admin section ############ -->
+
+            <h4><input
             type="checkbox"
             name="BoxSelect[]"
             value="isAdmin"/>
-            <label for="isAdmin">TA Administrator</label><br><br>
+            <label for="isAdmin">TA Administrator</label></h4><br>
 
-
-            <h4> Select at least ONE term:</h4>
-
-            <select id ="test">
-            <?php
-            $con = mysqli_connect("localhost","root","","ta-management");
-
-            #distinct to avoid duplicates terms and year combinations
-            $query = "SELECT DISTINCT term,year FROM course";
-            $query_run = mysqli_query($con, $query);
-
-            if(mysqli_num_rows($query_run) > 0)
-            {
-                foreach($query_run as $courseNum)
-                {
-                    ?>
-                    <input type="checkbox" name="term[]" value="<?= $courseNum['term'] . ' ' . $courseNum['year'] ; ?>" /> 
-                    <?= $courseNum['term'] . ' ' . $courseNum['year'] ; ?> <br/>
-                    <?php
-                }
-            }
-            else
-            {
-                echo "No Record Found";
-            }
-            ?>
-
-        </select>
-
-
-            <h4> Select at least ONE course:</h4>
-
-            <?php
-            $con = mysqli_connect("localhost","root","","ta-management");
-
-            $query = "SELECT * FROM course";
-            $query_run = mysqli_query($con, $query);
-
-            if(mysqli_num_rows($query_run) > 0)
-            {
-                foreach($query_run as $courseNum)
-                {
-                    ?>
-                    <input type="checkbox" name="courseNum[]" value="<?= $courseNum['courseNumber']; ?>" /> 
-                    <?= $courseNum['courseNumber']; ?> <br/>
-                    <?php
-                }
-            }
-            else
-            {
-                echo "No Record Found";
-            }
-            ?>
-
-            </div><br>  
-
-            <input type="submit" name="submit" value="register now" class="form-btn">
-            <p>already have an account? <a href="../login/login.html">login now</a></p>
-            </form>
-        
-            <div class="footer"></div> 
-     </div> 
+            <!--  ############ END TA admin section ############ -->
+        </form>
+    
+    </div>
      
-     <div class="footer">.</div> 
+    <div class="footer">.</div> 
     
 
 
