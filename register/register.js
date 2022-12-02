@@ -121,33 +121,3 @@ function showTaCheckboxes() {
 }
 
 
-var checkForm = function () {
-
-  var errors = [];
-  var pass= document.getElementById('pass');
-  var cpass = document.getElementById('cpass');
-  var isStudent = document.getElementById('isStudent');
-  var isTA = document.getElementById('isStudent');
-
-
-
-  //check if at least one user type is selected
-  if(pass!=cpass){
-    errors.push("Passwords do not match");
-  }
-
-  //check if at least one user type is selected
-  if(!$('#BoxSelect input[type="checkbox"]').is(':checked')){
-    errors.push("Please select at least one user type!");
-  }
- 
-  //check if student option is selected and at least 1 course is selected
-  if(isStudent && (!$('#StudentCourses input[type="checkbox"]').is(':checked')))
-    errors.push("Student must choose at least 1 course");
-
-  //check if ta option is selected and at least 1 course is selected
-  if(isTA && (!$('#taCourses input[type="checkbox"]').is(':checked')))
-    errors.push("Teacher Assistant must choose at least 1 course");
-  
-  alert(errors.join('\n'));
-}
