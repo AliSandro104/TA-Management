@@ -1,8 +1,41 @@
 <?php
-// Start the session
-session_start();
+  // Start the session
+  session_start();
 
-$id = $_SESSION["email"]
+  $id = $_SESSION["email"];
+
+
+
+
+  $servername = "localhost";
+  $username = "root";
+  $db_password = "";
+  $dbname = "ta-management";
+
+  // Connect to database and check if successful
+  $conn = mysqli_connect($servername, $username, $db_password, $dbname);
+
+
+  if(isset($_POST['submit'])){
+
+      //fields set as required, no need to check input
+      $ta_info_string = $_POST['TA'];
+      $ta_info = (explode(" ", $ta_info_string));
+      $comment =  $_POST['comment'] ?? false;
+      $rating =  $_POST['rating'];
+      $ta_email = $ta_info[0];
+      $ta_course = $ta_info[1];
+      $ta_term = $ta_info[2];
+      $ta_year = $ta_info[3];
+
+      $query = "insert into ta_rating (rated_by,rating_for,course,term,year,rating,comment) values ('$id','$ta_email', '$ta_course','$ta_term','$ta_year','$rating','$comment')";
+      mysqli_query($conn, $query);
+
+      echo"<script>alert('Submission successful!')</script>";
+
+      //redirect to main dashboard after successful rating submission
+      header("Location: ./dashboard.php");
+      die;}
 
 ?>
 
@@ -141,8 +174,8 @@ $id = $_SESSION["email"]
       
       <br><br>
       
-      <div class="form-container" id="form1">
-        <form action="" method="post">
+      <div class="form-container" id="form1" style>
+        <form action="./dashboard_student.php" method="post">
           <h1> Rate your TA </h1>
 
           <br><br>
@@ -151,72 +184,74 @@ $id = $_SESSION["email"]
                   
           <label for ="ta"><h5> Select the TA you would like to rate</h5></label><br>
               
-            <select name="TA" id="TA" value ="TA">
-              <option hidden disabled selected value = "N/A"> -- TA -- </option>
-
+            <select name="TA" id="TA" required class="custom-select" style="width:200px;">
+              
               <?php
-                        $con = mysqli_connect("localhost","root","","ta-management");
-                        #distinct to avoid duplicates terms and year combinations
-                        $query = "SELECT DISTINCT firstName,lastName FROM all_ta";
-                        $result = mysqli_query($con, $query);
+
+                $conn = mysqli_connect("localhost","root","","ta-management");
+
+                if ($conn -> connect_error){
+                  die ("Connection failed: " . $conn->connect_error);
+                  }
+
+                #distinct to avoid duplicates terms and year combinations
+                $ta_query = "SELECT DISTINCT * FROM all_ta ";
+                
+                $result = mysqli_query($conn, $ta_query);
+                
+                if(mysqli_num_rows($result) > 0){
+                    foreach($result as $r){
+                        $email = $r['email'];
+                        $fname = $r['firstName'];
+                        $lname = $r['lastName'];
+                        $course = $r['courseNumber'];
+                        $term = $r['term'];
+                        $year = $r['year'];
                         
-                        if(mysqli_num_rows($result) > 0){
-                            foreach($result as $r){
-                                $fname = $r['firstName'];
-                                $lname = $r['lastName'];
-                                $email = $r['email'];
-                                $course = $r['courseNumber'];
-                                $term = $r['term'];
-                                $year = $r['year'];
-                                    echo "<option value= '$email' /> $year <br/>";
-                            }
-                        }
-                        else
-                        {
-                        echo "No Record Found";
-                        }
-                    ?>
+                        $ta_val= $email .' ' . $course . ' ' . $term . ' ' . ' ' .$year;
+
+                        echo "<option selected value= '$ta_val'/> $fname $lname $course/$term/$year <br>";
+                    }
+                }
+                else
+                {
+                echo "No Record Found";
+                }
+
+              ?>
               
             </select>
             <br><br>
 
-            <!-- SELECT TA -->
-            
-            <div id="ta-select" >
-              <label for ="ta"><h4> Select the TA you would like to rate: </h4></label><br>
-                
-              <select name="ta" id="ta">
-                <option hidden disabled selected value="N/A"> -- TA -- </option>
+            <textarea name = "comment" class="comment" placeholder = "Leave a comment here..."></textarea>
 
-                <?php
-
-                        include "../cgi_bin/dashboard_student_submit.php";
-
-                          $con = mysqli_connect("localhost","root","","ta-management");
-                          #distinct to avoid duplicates terms and year combinations
-                          $query = "SELECT DISTINCT email FROM all_ta WHERE (courseNumber= $course AND term = $term AND year = $year)";
-                          $result = mysqli_query($con, $query);
-                          
-                          if(mysqli_num_rows($result) > 0){
-                              foreach($result as $r){
-                                  $email = $r['email'];
-                                      echo "<option value= '$email' /> $email <br/>";
-                              }
-                          }
-                          else
-                          {
-                          echo "No Record Found";
-                          }
-                      ?>
-                
-              </select>
-
-            </div>
             <br><br>
 
-            <button type="submit" class ="confirm-btn" id="confirm-btn" name="confirm" >Confirm selection</button> <br><br>
+            <fieldset class="rating">
+              <legend> <h5>Rating out of 5</h5></legend>
+              <input type="radio" id="no-rate" class="input-no-rate" name="rating" value="0" checked=""
+                  aria-label="No rating." required>
 
-                        
+              <input type="radio" id="rate1" name="rating" value="1" >
+              <label for="rate1">1 star</label>
+
+              <input type="radio" id="rate2" name="rating" value="2">
+              <label for="rate2">2 stars</label>
+
+              <input type="radio" id="rate3" name="rating" value="3">
+              <label for="rate3">3 stars</label>
+
+              <input type="radio" id="rate4" name="rating" value="4">
+              <label for="rate4">4 stars</label>
+
+              <input type="radio" id="rate5" name="rating" value="5">
+              <label for="rate5">5 stars</label>
+
+              <span class="focus-ring"></span>
+            </fieldset>  <br>
+            
+            
+            <button type="submit" class ="confirm-btn" id="confirm-btn" name="submit" >Submit</button> <br><br>
 
         </form>
       </div>

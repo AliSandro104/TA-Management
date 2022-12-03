@@ -26,9 +26,3 @@ function displayTaList() {
 
 
 
-function returnVal(id){
-
-    var val = document.getElementById(id);
-    return val.value;
-
-}
