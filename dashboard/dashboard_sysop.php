@@ -22,7 +22,18 @@ $id = $_SESSION["email"]
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
-
+    <style type="text/css">
+      .footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height:50px;
+        background-color: #DC241F;
+        color:#DC241F;
+        text-align: center;
+      }
+    </style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
@@ -35,10 +46,10 @@ $id = $_SESSION["email"]
             window.location = "dashboard_student.php" 
             
             if($(this).val()=="2")
-            window.location = "dashboard_ta_manage.php" 
+            window.location = "dashboard_select_course.php" 
 
             if($(this).val()=="3")
-            window.location = "dashboard_ta_manage.php" 
+            window.location = "dashboard_select_course.php" 
 
             if($(this).val()=="4")
             window.location = "dashboard_admin.php" 
@@ -777,6 +788,7 @@ if (array_key_exists("email", $_SESSION)) {
         </div>
       </div>
     </div>
+    <div class="footer">.</div> 
     <script>
       function loadExistingData() {
         getProfAccounts();

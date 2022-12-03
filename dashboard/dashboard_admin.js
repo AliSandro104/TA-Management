@@ -36,7 +36,7 @@ for (i = 0; i < quotas.length; i++) {
     p.className += "alert_text";
     parentDiv.append(p);
     
-    // create a form using javascript to let the user fix the TA quota and the enrollment number to follow the guidelines
+    // create a form using javascript to let the user fix the TA quota and the enrollment number to respect the guidelines
     var form = document.createElement("form");
     form.action = "../cgi_bin/fix_ta_quota.php";
     form.method = "post";

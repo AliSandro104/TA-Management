@@ -86,6 +86,38 @@ $id = $_SESSION["email"]
     .fix_error_div {
       margin-bottom: 20px;
     }
+
+    .footer {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height:50px;
+      background-color: #DC241F;
+      color:#DC241F;
+      text-align: center;
+    }
+
+    .confirm-btn {
+      border: 1px solid black ;
+      color: rgb(0, 0, 0);
+      padding: 12px 24px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      font-weight: bold;
+      margin: 4px 2px;
+      transition-duration: 0.4s;
+      cursor: pointer;
+  }
+
+  .confirm-btn:hover {
+    background: crimson;
+    font-weight: bold;
+    color:#fff;
+  }
+
   </style>
 
   <body>
@@ -410,7 +442,7 @@ $id = $_SESSION["email"]
                 <input style="display: none;" type="text" name="term" value="<?php echo $term_year; ?>">
                 <?php $result2 = $conn -> query("SELECT Email FROM ta_cohort WHERE TermYear = '$term_year' AND TAName NOT IN (SELECT TAName from ta_assigned WHERE TermYear = '$term_year')"); ?>
                 <i>Choose a TA to add:</i>
-                <select name="chosenTA">
+                <select style="width:auto;" name="chosenTA" class="custom-select">
             <?php
                 while($row2 = mysqli_fetch_array($result2)) {
             ?>   
@@ -424,7 +456,7 @@ $id = $_SESSION["email"]
                 <?php $result3 = $conn -> query("SELECT CourseNumber FROM courses_quota WHERE (TermYear = '$term_year' AND PositionsToAssign > 0)"); ?>
                 <p></p>
                 <i>Choose a course for the TA:</i>
-                <select name="chosenCourse">
+                <select style="width:auto;" name="chosenCourse" class="custom-select">
             <?php
                 while($row3 = mysqli_fetch_array($result3)) {
             ?>   
@@ -436,7 +468,7 @@ $id = $_SESSION["email"]
                 ?>
                 </select>
                 <p></p>
-                <input style="cursor: pointer;" type="submit">
+                <input style="cursor: pointer;" class="confirm-btn" type="submit">
               </form> 
               </div>
               <?php } ?> 
@@ -456,24 +488,25 @@ $id = $_SESSION["email"]
             <form action="../cgi_bin/remove_ta_from_course.php" method="post">
               <p></p>
               <i>Choose which TA to remove: </i>
-              <select name="chosenID">
+              <select style="width:auto;" class="custom-select" name="chosenID">
             <?php
                 while($row4 = mysqli_fetch_array($result4)) {
             ?>   
                   <option class="select-options" value="<?php echo $row4['AssignID']; ?>">
-                  <?php echo $row4['TAEmail'] . " from " . $row4['CourseNum'] . " in " . $row4['TermYear']; ?>
+                  <?php echo $row4['TAEmail'] . " from " . $row4['CourseNum'] . " - " . $row4['TermYear']; ?>
                   </option>
                   <?php
                 }
                 ?>
                 </select>
                 <p></p>
-                <input style="margin: 0px 0px 30px 0px; cursor: pointer;" type="submit">
+                <input style="margin: 0px 0px 100px 0px; cursor: pointer;" class="confirm-btn" type="submit">
               </form> 
               </div>  
         </div>
       </div>
     </div>
+    <div class="footer">.</div> 
     <script src="./dashboard_admin.js"></script>
   </body>
 </html>
