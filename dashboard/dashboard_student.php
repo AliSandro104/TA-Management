@@ -147,80 +147,28 @@ $id = $_SESSION["email"]
 
           <br><br>
 
-          <!-- SELECT YEAR -->
+          <!-- SELECT TA -->
                   
-          <label for ="year"> Select academic year: </label>
+          <label for ="ta"><h5> Select the TA you would like to rate</h5></label><br>
               
-            <select name="year" id="year">
-              <option hidden disabled selected value = "N/A"> -- Year -- </option>
+            <select name="TA" id="TA" value ="TA">
+              <option hidden disabled selected value = "N/A"> -- TA -- </option>
 
               <?php
                         $con = mysqli_connect("localhost","root","","ta-management");
                         #distinct to avoid duplicates terms and year combinations
-                        $query = "SELECT DISTINCT year FROM course";
+                        $query = "SELECT DISTINCT firstName,lastName FROM all_ta";
                         $result = mysqli_query($con, $query);
                         
                         if(mysqli_num_rows($result) > 0){
                             foreach($result as $r){
-                                $year = $r['year'];
-                                    echo "<option value= '$year' /> $year <br/>";
-                            }
-                        }
-                        else
-                        {
-                        echo "No Record Found";
-                        }
-                    ?>
-              
-            </select>
-            <br><br>
-
-
-            <!-- SELECT TERM -->
-        
-            <label for ="term"> Select academic term: </label>
-              
-            <select name="term" id="term">
-              <option hidden disabled selected value= "N/A"> -- Term -- </option>
-
-              <?php
-                        $con = mysqli_connect("localhost","root","","ta-management");
-                        #distinct to avoid duplicates terms and year combinations
-                        $query = "SELECT DISTINCT term FROM course";
-                        $result = mysqli_query($con, $query);
-                        
-                        if(mysqli_num_rows($result) > 0){
-                            foreach($result as $r){
-                                $term = $r['term'];
-                                    echo "<option value= '$term' /> $term <br/>";
-                            }
-                        }
-                        else
-                        {
-                        echo "No Record Found";
-                        }
-                    ?>
-              
-            </select>
-            <br><br>
-
-            <!-- SELECT COURSES -->
-        
-            <label for ="course"> Select a course: </label>
-              
-            <select name="course" id="course">
-              <option hidden disabled selected value="N/A"> -- Course -- </option>
-
-              <?php
-                        $con = mysqli_connect("localhost","root","","ta-management");
-                        #distinct to avoid duplicates terms and year combinations
-                        $query = "SELECT DISTINCT courseNumber FROM course";
-                        $result = mysqli_query($con, $query);
-                        
-                        if(mysqli_num_rows($result) > 0){
-                            foreach($result as $r){
+                                $fname = $r['firstName'];
+                                $lname = $r['lastName'];
+                                $email = $r['email'];
                                 $course = $r['courseNumber'];
-                                    echo "<option value= '$course' /> $course <br/>";
+                                $term = $r['term'];
+                                $year = $r['year'];
+                                    echo "<option value= '$email' /> $year <br/>";
                             }
                         }
                         else
@@ -231,40 +179,42 @@ $id = $_SESSION["email"]
               
             </select>
             <br><br>
-
-
-            <button type="button" class ="confirm-btn" id="confirm-btn" onclick="displayTaList()">Confirm selection</button> <br><br>
 
             <!-- SELECT TA -->
             
-            <div id="ta-select" style="display:none">
-            <label for ="ta"><h4> Select the TA you would like to rate: </h4></label><br>
-              
-            <select name="ta" id="ta">
-              <option hidden disabled selected value="N/A"> -- TA -- </option>
+            <div id="ta-select" >
+              <label for ="ta"><h4> Select the TA you would like to rate: </h4></label><br>
+                
+              <select name="ta" id="ta">
+                <option hidden disabled selected value="N/A"> -- TA -- </option>
 
-              <?php
-                        $con = mysqli_connect("localhost","root","","ta-management");
-                        #distinct to avoid duplicates terms and year combinations
-                        $query = "SELECT DISTINCT year FROM course";
-                        $result = mysqli_query($con, $query);
-                        
-                        if(mysqli_num_rows($result) > 0){
-                            foreach($result as $r){
-                                $year = $r['year'];
-                                    echo "<option value= '$year' /> $year <br/>";
-                            }
-                        }
-                        else
-                        {
-                        echo "No Record Found";
-                        }
-                    ?>
-              
-            </select>
+                <?php
 
-            <div id="ta-select">
+                        include "../cgi_bin/dashboard_student_submit.php";
+
+                          $con = mysqli_connect("localhost","root","","ta-management");
+                          #distinct to avoid duplicates terms and year combinations
+                          $query = "SELECT DISTINCT email FROM all_ta WHERE (courseNumber= $course AND term = $term AND year = $year)";
+                          $result = mysqli_query($con, $query);
+                          
+                          if(mysqli_num_rows($result) > 0){
+                              foreach($result as $r){
+                                  $email = $r['email'];
+                                      echo "<option value= '$email' /> $email <br/>";
+                              }
+                          }
+                          else
+                          {
+                          echo "No Record Found";
+                          }
+                      ?>
+                
+              </select>
+
+            </div>
             <br><br>
+
+            <button type="submit" class ="confirm-btn" id="confirm-btn" name="confirm" >Confirm selection</button> <br><br>
 
                         
 

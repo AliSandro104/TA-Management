@@ -8,19 +8,17 @@ function displayTaList() {
     // Get courses select box
     var course = document.getElementById("course");
 
-    var TA_list = document.getElementById("ta");
+    var TA_list = document.getElementById("ta-select");
 
 
 
     // If year is selected, show the term
     if (year.value != 'N/A' && term.value != 'N/A' && course.value != 'N/A'){
-        TA_list.style.display = "initial";
-        TA_list.required = true;
+        TA_list.style.display = "initial"; 
       
 
     } else {
         TA_list.style.display = "none";
-        TA_list.required = false;
         alert("Please complete all selections")
        
     }

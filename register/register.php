@@ -90,7 +90,7 @@
                                 $course = $split[0] . ' '  .$split[1];
                                 $term = $split[2];
                                 $year = $split[3];
-                                $query1= "insert into all_students (email,studentID,courseNumber,term,year) values ('$email','$studentID','$course','$term','$year')";
+                                $query1= "insert into all_students (email,studentID,courseNumber,term,year,firstName,lastName) values ('$email','$studentID','$course','$term','$year','$fname','$lname')";
                                 mysqli_query($conn, $query1);
                             }
                         }
@@ -117,7 +117,7 @@
                                 $course = $split[0] . ' '  .$split[1];
                                 $term = $split[2];
                                 $year = $split[3];
-                                $query3= "insert into all_ta (email,courseNumber,term,year) values ('$email','$course','$term','$year')";
+                                $query3= "insert into all_ta (email,courseNumber,term,year,firstName,lastName) values ('$email','$course','$term','$year','$fname','$lname')";
                                 mysqli_query($conn, $query3);
                             }
                         }
