@@ -25,6 +25,8 @@ for (i = 0; i < quotas.length; i++) {
   var ratio = enrollment / quota;
   var parentDiv;
   var prev;
+  
+  // if quota ratio not respected,
   if (ratio < 30 || ratio > 45) {
     parentDiv = upTo(quotas[i], "div");
     prev = parentDiv.previousElementSibling;
@@ -34,6 +36,7 @@ for (i = 0; i < quotas.length; i++) {
     p.className += "alert_text";
     parentDiv.append(p);
     
+    // create a form using javascript to let the user fix the TA quota and the enrollment number to follow the guidelines
     var form = document.createElement("form");
     form.action = "../cgi_bin/fix_ta_quota.php";
     form.method = "post";
@@ -43,7 +46,8 @@ for (i = 0; i < quotas.length; i++) {
     var input_quota = document.createElement("input");
     var input_submit = document.createElement("input");
     var input_course = document.createElement("input");
-    
+    var input_term = document.createElement("input");
+
     input_enroll.type = "number";
     input_enroll.name = "enroll";
 
@@ -57,6 +61,14 @@ for (i = 0; i < quotas.length; i++) {
     input_course.name = "course";
     input_course.value = prev.innerHTML;
     input_course.style.display = "none";
+
+    input_term.type = "text";
+    input_term.name = "term";
+    var str = parentDiv.children[0].innerHTML;
+    var begin = str.indexOf("<span>") + 6;
+    var end = str.indexOf("</span>");
+    input_term.value = str.substring(begin, end);
+    input_term.style.display = "none";
 
     var div1 = document.createElement("div");
     var div2 = document.createElement("div");
@@ -73,6 +85,7 @@ for (i = 0; i < quotas.length; i++) {
     div2.append(input_quota);
     div3.append(input_submit);
 
+    form.append(input_term);
     form.append(input_course);
     form.append(div1);
     form.append(div2);

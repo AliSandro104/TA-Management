@@ -21,9 +21,10 @@ $id = $_SESSION["email"]
     />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <!-- script to redirect the user to the appropriate page -->
     <script>
       jQuery(function($) {
-      $('select').on('change', function() {
+      $('#jquery-select').on('change', function() {
       var url = $(this).val();
 
       if($(this).val()=="1")
@@ -88,7 +89,6 @@ $id = $_SESSION["email"]
   </style>
 
   <body>
-    <script src="./admin.js"></script>
     <script
       src="https://code.jquery.com/jquery-3.3.1.js"
       integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
@@ -110,7 +110,8 @@ $id = $_SESSION["email"]
               style="width: 14rem; height: auto"
               alt="mcgill-logo"
             />
-            <select class="custom-select">
+            <!-- code to show the user which webpages they have access to -->
+            <select class="custom-select" id="jquery-select">
               <option value="1" selected="selected"  >Rate a TA</option>
               
               <?php
@@ -163,13 +164,21 @@ $id = $_SESSION["email"]
         </div>
       </nav>
       <nav>
+        <!-- Show the nagivation options on the webpage -->
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
           <a
             class="nav-item nav-link active"
             data-toggle="tab"
-            href="#nav-tas"
+            href="#nav-ta-info"
             role="tab"
-            >TA Info/History</a
+            >TA Info</a
+          >
+          <a
+            class="nav-item nav-link"
+            data-toggle="tab"
+            href="#nav-ta-history"
+            role="tab"
+            >TA History</a
           >
           <a
             class="nav-item nav-link"
@@ -181,7 +190,7 @@ $id = $_SESSION["email"]
         </div>
       </nav>
       <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade show active" id="nav-tas" role="tabpanel">
+        <div class="tab-pane fade show active" id="nav-ta-info" role="tabpanel">
             <!-- Import TA cohort -->
           <button
           type="button"
@@ -228,7 +237,8 @@ $id = $_SESSION["email"]
             </div>
           </div>
         </div>
-          <h1 style="margin-top: 20px;">List of TA with their info</h1>
+          <!-- View the TA info on this page -->
+          <h1 style="margin-top: 20px;">Click on a TA to view their application info</h1>
           <?php
             // Create connection
             $conn = new mysqli("localhost", "root", "", "ta-management");
@@ -236,12 +246,12 @@ $id = $_SESSION["email"]
             if ($conn->connect_error) {
                 die("Connection failed: " . $conn->connect_error);
             }
-            $result = $conn -> query("SELECT * FROM ta_cohort");
+            $result = $conn -> query("SELECT * FROM ta_cohort ORDER BY TermYear");
               while($row = mysqli_fetch_array($result)) {
           ?>
-            <button class="accordion"><?php echo $row['TAName']?></button>
+            <!-- Get the info from the ta_cohort database -->
+            <button class="accordion"><?php echo $row['TAName']?> <?php echo " - " . $row['TermYear'] ?></button>
             <div class="panel" style="margin-top: 20px;">
-              <p><b>Semester of application: </b><?php echo $row['TermYear']?></p>
               <p><b>Legal name: </b><?php echo $row['LegalName']?></p>
               <p><b>Student ID: </b><?php echo $row['StudentID']?></p>
               <p><b>Email: </b><?php echo $row['Email']?></p>
@@ -256,6 +266,39 @@ $id = $_SESSION["email"]
               <p><b>Courses Applied To: </b><?php echo $row['CoursesApplied']?></p>
               <p><b>Open to other courses: </b><?php echo $row['OpenToOtherCourses']?></p>
               <p><b>Notes: </b><?php echo $row['Notes']?></p>
+            </div>
+          <?php
+            }
+          ?>
+        </div>
+        <div class="tab-pane fade" id="nav-ta-history" role="tabpanel">
+          <!-- View the TA history on this page -->
+        <h1 style="margin-top: 20px;">Click on a TA to view their history</h1>
+        <?php
+            // Create connection
+            $conn = new mysqli("localhost", "root", "", "ta-management");
+            // Check connection
+            if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+            }
+            $result = $conn -> query("SELECT * FROM ta_cohort GROUP BY Email");
+              while($row = mysqli_fetch_array($result)) {
+          ?>
+            <!-- Get the info from the ta_cohort database -->
+            <button class="accordion"><?php echo $row['TAName']?></button>
+            <div class="panel" style="margin-top: 20px;">
+              <p><b>Legal name: </b><?php echo $row['LegalName']?></p>
+              <p><b>Student ID: </b><?php echo $row['StudentID']?></p>
+              <p><b>Email: </b><?php echo $row['Email']?></p>
+              <h3 style="margin: 30px 0px 20px 0px;"><?php echo $row['LegalName']?>'s TA Record</h3>
+              <?php
+              $email = $row['Email'];
+              $result1 = $conn -> query("SELECT * FROM ta_history WHERE TAEmail='$email' ORDER BY TermYear");
+              while($row1 = mysqli_fetch_array($result1)) { ?>
+              <p><b><?php echo $row1['TermYear'] . ": " ?></b><?php echo $row1['CourseNumber']?></p>
+              <?php
+                }
+              ?>
             </div>
           <?php
             }
@@ -307,6 +350,7 @@ $id = $_SESSION["email"]
             </div>
           </div>
         </div>
+            <!-- View the list of courses on this page -->
             <h1 style="margin-top: 20px;">List of courses</h1>
             <?php
                 // Create connection
@@ -315,32 +359,121 @@ $id = $_SESSION["email"]
                 if ($conn->connect_error) {
                     die("Connection failed: " . $conn->connect_error);
                 }
-                $result = $conn -> query("SELECT * FROM courses_quota");
+                $result = $conn -> query("SELECT * FROM courses_quota ORDER BY TermYear");
                 while($row = mysqli_fetch_array($result)) {
             ?>
+                <!-- Get the info from the courses_quota database -->
                 <button class="accordion"><?php echo $row['CourseNumber']?></button>
                 <div class="panel" style="margin-top: 20px;">
-                <p><b>Term Year: </b><?php echo $row['TermYear']?></p>
+                <p>
+                  <b>Term Year: </b>
+                  <span><?php echo $row['TermYear']?></span>
+                </p>
                 <p><b>Course Name: </b><?php echo $row['CourseName']?></p>
                 <p><b>Course Type: </b><?php echo $row['CourseType']?></p>
                 <p><b>Instructor Name: </b><?php echo $row['InstructorName']?></p>
                 <p><b>Enrollment Number: </b><b style="font-weight: normal;" class="enrollment-number"><?php echo $row['EnrollmentNumber']?></b></p>
                 <p><b>TA Quota: </b><b style="font-weight: normal;" class="ta-quota"><?php echo $row['TAQuota']?></b></p>
-                </div>
+                <p><b>Remaining TA positions to assign: </b><b style="font-weight: normal;"><?php echo $row['PositionsToAssign']?></b></p>
+                <?php
+                  $term = $row['TermYear'];
+                  $course_num = $row['CourseNumber'];
+                  $result4 = $conn -> query("SELECT TAName FROM ta_assigned WHERE (TermYear='$term' AND CourseNum='$course_num')");
+                ?>
+                <!-- Get the TAs assigned to each course and display them-->
+                <p><b>TA's assigned so far: </b>
+                <?php
+                  while ($row_ta = mysqli_fetch_array($result4)) { echo $row_ta['TAName'] . ", "; }  
+                ?>
+                </p>
+                </div>       
             <?php
                 }
             ?>
+            <?php
+                // Create connection
+                $conn = new mysqli("localhost", "root", "", "ta-management");
+                // Check connection
+                if ($conn->connect_error) {
+                    die("Connection failed: " . $conn->connect_error);
+                }
+                $result1 = $conn -> query("SELECT DISTINCT TermYear FROM courses_quota ORDER BY TermYear"); 
+                while($row = mysqli_fetch_array($result1)) {
+              ?>
+              <!-- Add TA to a course feature for each unique semester-->
+            <div>
+            <h1 style="margin: 50px 0px 20px 0px;">Add TA to a course in <?php echo $row['TermYear'];?> </h1>
+            <form action="../cgi_bin/add_ta_to_course.php" method="post">
+                <?php
+                $term_year = $row['TermYear'];
+                ?>
+                <input style="display: none;" type="text" name="term" value="<?php echo $term_year; ?>">
+                <?php $result2 = $conn -> query("SELECT Email FROM ta_cohort WHERE TermYear = '$term_year' AND TAName NOT IN (SELECT TAName from ta_assigned WHERE TermYear = '$term_year')"); ?>
+                <i>Choose a TA to add:</i>
+                <select name="chosenTA">
+            <?php
+                while($row2 = mysqli_fetch_array($result2)) {
+            ?>   
+                  <option value="<?php echo $row2['Email']; ?>">
+                  <?php echo $row2['Email']; ?>
+                  </option>
+                  <?php
+                }
+                ?>
+                </select>
+                <?php $result3 = $conn -> query("SELECT CourseNumber FROM courses_quota WHERE (TermYear = '$term_year' AND PositionsToAssign > 0)"); ?>
+                <p></p>
+                <i>Choose a course for the TA:</i>
+                <select name="chosenCourse">
+            <?php
+                while($row3 = mysqli_fetch_array($result3)) {
+            ?>   
+                  <option value="<?php echo $row3['CourseNumber']; ?>">
+                  <?php echo $row3['CourseNumber']; ?>
+                  </option>
+                  <?php
+                }
+                ?>
+                </select>
+                <p></p>
+                <input style="cursor: pointer;" type="submit">
+              </form> 
+              </div>
+              <?php } ?> 
+              
+              <?php
+                // Create connection
+                $conn = new mysqli("localhost", "root", "", "ta-management");
+                // Check connection
+                if ($conn->connect_error) {
+                    die("Connection failed: " . $conn->connect_error);
+                }
+                $result4 = $conn -> query("SELECT * FROM ta_assigned ORDER BY TermYear"); 
+              ?>
+              <!-- Remove TA from a course they have been assigned to-->
+            <div>
+            <h1 style="margin: 50px 0px 20px 0px;">Remove a TA from a course</h1>
+            <form action="../cgi_bin/remove_ta_from_course.php" method="post">
+              <p></p>
+              <i>Choose which TA to remove: </i>
+              <select name="chosenID">
+            <?php
+                while($row4 = mysqli_fetch_array($result4)) {
+            ?>   
+                  <option class="select-options" value="<?php echo $row4['AssignID']; ?>">
+                  <?php echo $row4['TAEmail'] . " from " . $row4['CourseNum'] . " in " . $row4['TermYear']; ?>
+                  </option>
+                  <?php
+                }
+                ?>
+                </select>
+                <p></p>
+                <input style="margin: 0px 0px 30px 0px; cursor: pointer;" type="submit">
+              </form> 
+              </div>  
         </div>
       </div>
     </div>
-    <script>
-      function loadExistingData() {
-        getProfAccounts();
-        getCourses();
-        getAccounts();
-      }
-      document.onload = loadExistingData();
-    </script>
     <script src="./dashboard_admin.js"></script>
   </body>
 </html>
