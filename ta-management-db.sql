@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 03, 2022 at 02:19 AM
+-- Generation Time: Dec 03, 2022 at 09:02 PM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -63,8 +63,8 @@ CREATE TABLE `all_ta` (
   `courseNumber` varchar(100) NOT NULL,
   `term` varchar(100) NOT NULL,
   `year` varchar(100) NOT NULL,
-  `firstName` varchar(100) DEFAULT NULL,
-  `lastName` varchar(100) DEFAULT NULL
+  `firstName` varchar(100) NOT NULL,
+  `lastName` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -72,12 +72,8 @@ CREATE TABLE `all_ta` (
 --
 
 INSERT INTO `all_ta` (`email`, `courseNumber`, `term`, `year`, `firstName`, `lastName`) VALUES
-('t8@test.com', 'COMP 250', 'Fall', '2022', NULL, NULL),
-('t8@test.com', 'COMP 307', 'Winter', '2023', NULL, NULL),
-('t1@test.com', 'COMP 250', 'Fall', '2022', NULL, NULL),
-('t1@test.com', 'COMP 307', 'Winter', '2023', NULL, NULL),
-('t4@test.com', 'COMP 250', 'Fall', '2022', NULL, NULL),
-('t4@test.com', 'COMP 307', 'Winter', '2023', NULL, NULL);
+('t5@test.com', 'COMP 250', 'FALL', '2022', 't5', 't5'),
+('t5@test.com', 'COMP 250', 'Fall', '2022', 't5', 't5');
 
 -- --------------------------------------------------------
 
@@ -220,6 +216,7 @@ INSERT INTO `ta_cohort` (`TermYear`, `TAName`, `StudentID`, `LegalName`, `Email`
 --
 
 CREATE TABLE `ta_history` (
+  `RecordID` int(11) NOT NULL,
   `TermYear` varchar(100) NOT NULL,
   `TAName` varchar(100) NOT NULL,
   `TAEmail` varchar(100) NOT NULL,
@@ -230,13 +227,44 @@ CREATE TABLE `ta_history` (
 -- Dumping data for table `ta_history`
 --
 
-INSERT INTO `ta_history` (`TermYear`, `TAName`, `TAEmail`, `CourseNumber`) VALUES
-('Fall 2020', 'Ali Hazime', 'ali.hazime@mail.mcgill.ca', 'COMP 202'),
-('Winter 2021', 'Hai Thien Doan Nguyen', 'hai.thien@mail.mcgill.ca', 'COMP 206'),
-('Winter 2021', 'Ali Hazime', 'ali.hazime@mail.mcgill.ca', 'COMP 202'),
-('Fall 2021', 'Moustapha Moumneh', 'moustapha.moumneh@mail.mcgill.ca', 'COMP 251'),
-('Fall 2022', 'Ali Hazime', 'ali.hazime@mail.mcgill.ca', 'COMP 307'),
-('Winter 2023', 'Moustapha Moumneh', 'moustapha.moumneh@mail.mcgill.ca', 'COMP 402');
+INSERT INTO `ta_history` (`RecordID`, `TermYear`, `TAName`, `TAEmail`, `CourseNumber`) VALUES
+(1, 'Fall 2020', 'Ali Hazime', 'ali.hazime@mail.mcgill.ca', 'COMP 202'),
+(2, 'Winter 2021', 'Hai Thien Doan Nguyen', 'hai.thien@mail.mcgill.ca', 'COMP 206'),
+(3, 'Winter 2021', 'Ali Hazime', 'ali.hazime@mail.mcgill.ca', 'COMP 202'),
+(4, 'Fall 2021', 'Moustapha Moumneh', 'moustapha.moumneh@mail.mcgill.ca', 'COMP 251'),
+(5, 'Fall 2022', 'Ali Hazime', 'ali.hazime@mail.mcgill.ca', 'COMP 307'),
+(6, 'Winter 2023', 'Moustapha Moumneh', 'moustapha.moumneh@mail.mcgill.ca', 'COMP 402');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ta_rating`
+--
+
+CREATE TABLE `ta_rating` (
+  `rated_by` varchar(100) NOT NULL,
+  `rating_for` varchar(100) NOT NULL,
+  `course` varchar(100) NOT NULL,
+  `term` varchar(100) NOT NULL,
+  `year` varchar(100) NOT NULL,
+  `rating` varchar(100) NOT NULL,
+  `comment` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `ta_rating`
+--
+
+INSERT INTO `ta_rating` (`rated_by`, `rating_for`, `course`, `term`, `year`, `rating`, `comment`) VALUES
+('john@comp307.com', 'A', 'r', 'r', 'a', '2', ''),
+('john@comp307.com', 'A', 'r', 'r', 'a', '2', 'Array'),
+('john@comp307.com', 't', '5', '@', 't', '3', 't5@test.com COMP 250 FALL  2022'),
+('john@comp307.com', 't5@test.com', 'COMP', '250', 'FALL', '5', 'Array'),
+('john@comp307.com', 't5@test.com', 'COMP', '250', 'FALL', '3', 'khara khara khara'),
+('john@comp307.com', 't5@test.com', 'COMP', '250', 'FALL', '0', ''),
+('john@comp307.com', 't5@test.com', 'COMP', '250', 'FALL', '5', 'very good'),
+('john@comp307.com', 't5@test.com', 'COMP 250', 'FALL', '', '4', 'lol'),
+('john@comp307.com', 't5@test.com', 'COMP 250', 'FALL', '2022', '3', 'aaaaaa');
 
 -- --------------------------------------------------------
 
@@ -265,7 +293,8 @@ INSERT INTO `user` (`firstName`, `lastName`, `email`, `password`, `createdAt`, `
 ('Mathieu', 'Blanchette', 'mathieu@comp307.com', '$2y$10$5HxIGFEmYO6OyG7IOgjlmuCRofwLTG2Ah9DtiEdGetHD.rZZN0Xbq', '2022-10-13 18:09:22', '2022-10-13 18:09:22'),
 ('t1', 't1', 't1@test.com', '111', '2022-12-02 09:35:43', '2022-12-02 09:35:43'),
 ('t2', 't2', 't2@test.com', '222', '2022-12-02 09:41:41', '2022-12-02 09:41:41'),
-('t4', 't4', 't4@test.com', '444', '2022-12-02 09:43:43', '2022-12-02 09:43:43');
+('t4', 't4', 't4@test.com', '444', '2022-12-02 09:43:43', '2022-12-02 09:43:43'),
+('t5', 't5', 't5@test.com', '$2y$10$7OBzYIh0Gb3iilJJl1FDd.2dF5uRr8BrAB0PBrdnO3N7hUPJ9WFCW', '2022-12-03 15:09:58', '2022-12-03 15:09:58');
 
 -- --------------------------------------------------------
 
@@ -321,7 +350,9 @@ INSERT INTO `user_usertype` (`userId`, `userTypeId`) VALUES
 ('t4@test.com', 1),
 ('t4@test.com', 2),
 ('t4@test.com', 3),
-('t4@test.com', 4);
+('t4@test.com', 4),
+('t5@test.com', 2),
+('t5@test.com', 3);
 
 --
 -- Indexes for dumped tables
@@ -346,6 +377,12 @@ ALTER TABLE `professor`
 --
 ALTER TABLE `ta_assigned`
   ADD PRIMARY KEY (`AssignID`);
+
+--
+-- Indexes for table `ta_history`
+--
+ALTER TABLE `ta_history`
+  ADD PRIMARY KEY (`RecordID`);
 
 --
 -- Indexes for table `user`
@@ -377,6 +414,12 @@ ALTER TABLE `user_usertype`
 --
 ALTER TABLE `ta_assigned`
   MODIFY `AssignID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `ta_history`
+--
+ALTER TABLE `ta_history`
+  MODIFY `RecordID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Constraints for dumped tables
