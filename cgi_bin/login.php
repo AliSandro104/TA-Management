@@ -24,8 +24,8 @@ $user = $result->fetch_assoc();
 $conn->close();
 
 if ($user) {
-    // retrieve password from database and hash it
-    $hashed_pass = password_hash($user['password'], PASSWORD_DEFAULT);
+    // retrieve password from database 
+    $hashed_pass = $user['password'];
 
     // check against the user input password
     $login_success = password_verify($_POST['password'], $hashed_pass);

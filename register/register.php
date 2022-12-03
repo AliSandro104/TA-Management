@@ -70,7 +70,8 @@
                     else{
 
                    //save to general user database once all requirements are checked
-                    $query = "insert into user (firstName,lastName,email,password,createdAt,updatedAt) values ('$fname','$lname','$email', '$password','$time','$time')";
+                   $hashed_pass = password_hash($password, PASSWORD_DEFAULT);
+                    $query = "insert into user (firstName,lastName,email,password,createdAt,updatedAt) values ('$fname','$lname','$email', '$hashed_pass','$time','$time')";
                     mysqli_query($conn, $query);
                     
                     //fill corresponding tables for each usertype
