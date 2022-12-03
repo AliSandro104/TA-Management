@@ -24,9 +24,9 @@
       $comment =  $_POST['comment'] ?? false;
       $rating =  $_POST['rating'];
       $ta_email = $ta_info[0];
-      $ta_course = $ta_info[1];
-      $ta_term = $ta_info[2];
-      $ta_year = $ta_info[3];
+      $ta_course = $ta_info[1] . ' ' . $ta_info[2];
+      $ta_term = $ta_info[3];
+      $ta_year = $ta_info[4];
 
       $query = "insert into ta_rating (rated_by,rating_for,course,term,year,rating,comment) values ('$id','$ta_email', '$ta_course','$ta_term','$ta_year','$rating','$comment')";
       mysqli_query($conn, $query);
@@ -88,7 +88,7 @@
 
   </head>
 
-  <body>
+  <body >
     <script src="./manage_users.js"></script>
     <script src="./manage_courses.js"></script>
     <script src="./manage_profs.js"></script>
@@ -102,7 +102,7 @@
       integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
       crossorigin="anonymous"
     ></script>
-    <div class="container">
+    <div class="container" >
       <nav class="navbar">
         <!-- Header -->
         <div class="container-fluid">
@@ -171,10 +171,11 @@
           </div>
         </div>
       </nav>
+              </div>
       
       <br><br>
       
-      <div class="form-container" id="form1" style>
+      <div class="form-container" id="form1" style = "background-color='#fff'">
         <form action="./dashboard_student.php" method="post">
           <h1> Rate your TA </h1>
 
@@ -208,7 +209,7 @@
                         $term = $r['term'];
                         $year = $r['year'];
                         
-                        $ta_val= $email .' ' . $course . ' ' . $term . ' ' . ' ' .$year;
+                        $ta_val= $email .' ' . $course . ' ' . $term . ' ' .$year;
 
                         echo "<option selected value= '$ta_val'/> $fname $lname $course/$term/$year <br>";
                     }
