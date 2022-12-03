@@ -24,7 +24,7 @@ $id = $_SESSION["email"]
     <!-- script to redirect the user to the appropriate page -->
     <script>
       jQuery(function($) {
-      $('select').on('change', function() {
+      $('#jquery-select').on('change', function() {
       var url = $(this).val();
 
       if($(this).val()=="1")
@@ -89,7 +89,6 @@ $id = $_SESSION["email"]
   </style>
 
   <body>
-    <script src="./admin.js"></script>
     <script
       src="https://code.jquery.com/jquery-3.3.1.js"
       integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
@@ -112,7 +111,7 @@ $id = $_SESSION["email"]
               alt="mcgill-logo"
             />
             <!-- code to show the user which webpages they have access to -->
-            <select class="custom-select">
+            <select class="custom-select" id="jquery-select">
               <option value="1" selected="selected"  >Rate a TA</option>
               
               <?php
@@ -239,7 +238,7 @@ $id = $_SESSION["email"]
           </div>
         </div>
           <!-- View the TA info on this page -->
-          <h1 style="margin-top: 20px;">Click on a TA to view their info</h1>
+          <h1 style="margin-top: 20px;">Click on a TA to view their application info</h1>
           <?php
             // Create connection
             $conn = new mysqli("localhost", "root", "", "ta-management");
@@ -275,6 +274,35 @@ $id = $_SESSION["email"]
         <div class="tab-pane fade" id="nav-ta-history" role="tabpanel">
           <!-- View the TA history on this page -->
         <h1 style="margin-top: 20px;">Click on a TA to view their history</h1>
+        <?php
+            // Create connection
+            $conn = new mysqli("localhost", "root", "", "ta-management");
+            // Check connection
+            if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+            }
+            $result = $conn -> query("SELECT * FROM ta_cohort GROUP BY Email");
+              while($row = mysqli_fetch_array($result)) {
+          ?>
+            <!-- Get the info from the ta_cohort database -->
+            <button class="accordion"><?php echo $row['TAName']?></button>
+            <div class="panel" style="margin-top: 20px;">
+              <p><b>Legal name: </b><?php echo $row['LegalName']?></p>
+              <p><b>Student ID: </b><?php echo $row['StudentID']?></p>
+              <p><b>Email: </b><?php echo $row['Email']?></p>
+              <h3 style="margin: 30px 0px 20px 0px;"><?php echo $row['LegalName']?>'s TA Record</h3>
+              <?php
+              $email = $row['Email'];
+              $result1 = $conn -> query("SELECT * FROM ta_history WHERE TAEmail='$email' ORDER BY TermYear");
+              while($row1 = mysqli_fetch_array($result1)) { ?>
+              <p><b><?php echo $row1['TermYear'] . ": " ?></b><?php echo $row1['CourseNumber']?></p>
+              <?php
+                }
+              ?>
+            </div>
+          <?php
+            }
+          ?>
         </div>
         <div class="tab-pane fade" id="nav-courses" role="tabpanel">
             <button
@@ -347,6 +375,17 @@ $id = $_SESSION["email"]
                 <p><b>Enrollment Number: </b><b style="font-weight: normal;" class="enrollment-number"><?php echo $row['EnrollmentNumber']?></b></p>
                 <p><b>TA Quota: </b><b style="font-weight: normal;" class="ta-quota"><?php echo $row['TAQuota']?></b></p>
                 <p><b>Remaining TA positions to assign: </b><b style="font-weight: normal;"><?php echo $row['PositionsToAssign']?></b></p>
+                <?php
+                  $term = $row['TermYear'];
+                  $course_num = $row['CourseNumber'];
+                  $result4 = $conn -> query("SELECT TAName FROM ta_assigned WHERE (TermYear='$term' AND CourseNum='$course_num')");
+                ?>
+                <!-- Get the TAs assigned to each course and display them-->
+                <p><b>TA's assigned so far: </b>
+                <?php
+                  while ($row_ta = mysqli_fetch_array($result4)) { echo $row_ta['TAName'] . ", "; }  
+                ?>
+                </p>
                 </div>       
             <?php
                 }
@@ -421,7 +460,7 @@ $id = $_SESSION["email"]
             <?php
                 while($row4 = mysqli_fetch_array($result4)) {
             ?>   
-                  <option value="<?php echo $row4['AssignID']; ?>">
+                  <option class="select-options" value="<?php echo $row4['AssignID']; ?>">
                   <?php echo $row4['TAEmail'] . " from " . $row4['CourseNum'] . " in " . $row4['TermYear']; ?>
                   </option>
                   <?php
@@ -429,20 +468,12 @@ $id = $_SESSION["email"]
                 ?>
                 </select>
                 <p></p>
-                <input style="cursor: pointer;" type="submit">
+                <input style="margin: 0px 0px 30px 0px; cursor: pointer;" type="submit">
               </form> 
               </div>  
         </div>
       </div>
     </div>
-    <script>
-      function loadExistingData() {
-        getProfAccounts();
-        getCourses();
-        getAccounts();
-      }
-      document.onload = loadExistingData();
-    </script>
     <script src="./dashboard_admin.js"></script>
   </body>
 </html>
