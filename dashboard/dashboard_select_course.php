@@ -9,7 +9,7 @@ $id = $_SESSION["email"]
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Rate a TA</title>
+    <title>TA Management</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -26,7 +26,7 @@ $id = $_SESSION["email"]
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
 
     />
-    <link rel="stylesheet" href="dashboard_select.css">
+    <link rel="stylesheet" href="dashboard_select_course.css">
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script>
@@ -81,7 +81,7 @@ $id = $_SESSION["email"]
             />
             <select class="custom-select" id = "jquery-select">
                 
-                <option value="1" selected="selected"  >Select a TA</option>
+                <option value="1" selected="selected"  >Rate a TA</option>
 
                 <?php
 
@@ -141,8 +141,8 @@ $id = $_SESSION["email"]
       <br><br>
       
       <div class="form-container" id="form1">
-        <form action="" method="post">
-          <h1> Select Course </h1>
+        <form action="dashboard_ta_management.php" method="post">
+          <h1> TA Management </h1>
 
           <br><br>
 
@@ -193,20 +193,11 @@ $id = $_SESSION["email"]
                 }
             }
             ?>
-            <option hidden disabled selected value = "N/A"> -- Course options -- </option>
             </select>
-
+            <button type="submit" class ="confirm-btn" id="confirm-btn" name="confirm" style="margin:50px 0px 0px 0px;">Confirm selection</button> <br><br>
             </div>
-            <br><br>
-
-            <button type="submit" class ="confirm-btn" id="confirm-btn" name="confirm" >Confirm selection</button> <br><br>
-
-                        
-
         </form>
       </div>
-      
-
         <div class="footer">.</div> 
 
   </body>

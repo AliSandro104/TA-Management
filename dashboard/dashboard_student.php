@@ -31,11 +31,12 @@
       $query = "insert into ta_rating (rated_by,rating_for,course,term,year,rating,comment) values ('$id','$ta_email', '$ta_course','$ta_term','$ta_year','$rating','$comment')";
       mysqli_query($conn, $query);
 
-      echo"<script>alert('Submission successful!')</script>";
-
       //redirect to main dashboard after successful rating submission
-      header("Location: ./dashboard.php");
-      die;}
+      echo "<script>
+      alert('Submission successful! Redirected to main page');
+      window.location.href='./dashboard.php';
+      </script>";
+      die; }
 
 ?>
 
@@ -72,10 +73,10 @@
             window.location = "dashboard_student.php" 
             
             if($(this).val()=="2")
-            window.location = "dashboard_ta_manage.php" 
+            window.location = "dashboard_select_course.php" 
 
             if($(this).val()=="3")
-            window.location = "dashboard_ta_manage.php" 
+            window.location = "dashboard_select_course.php" 
 
             if($(this).val()=="4")
             window.location = "dashboard_admin.php" 
@@ -256,8 +257,6 @@
 
         </form>
       </div>
-      
-
         <div class="footer">.</div> 
 
   </body>

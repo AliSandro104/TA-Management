@@ -40,7 +40,7 @@ $id = $_SESSION["email"]
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
   <script>
     jQuery(function($) {
-	  $('select').on('change', function() {
+	  $('#jquery-select').on('change', function() {
 		var url = $(this).val();
 
 		if($(this).val()=="1")
@@ -131,7 +131,7 @@ $id = $_SESSION["email"]
 
       ?>
 
-      <select >
+      <select class="custom-select" id="jquery-select" style="width: auto;">
 
 
       <option value="1" selected="selected"  >Rate a TA</option>

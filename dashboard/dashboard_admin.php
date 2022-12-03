@@ -31,10 +31,10 @@ $id = $_SESSION["email"]
             window.location = "dashboard_student.php" 
           
           if($(this).val()=="2")
-          window.location = "dashboard_ta_manage.php" 
+          window.location = "dashboard_select_course.php" 
 
           if($(this).val()=="3")
-          window.location = "dashboard_ta_manage.php" 
+          window.location = "dashboard_select_course.php" 
 
           if($(this).val()=="4")
           window.location = "dashboard_admin.php" 
@@ -180,7 +180,7 @@ $id = $_SESSION["email"]
               }
 
               ?>
-              <option hidden disabled selected value> -- select an option -- </option>
+              <option hidden disabled selected value> -- change page -- </option>
             </select>
           </div>
           <!-- Logout -->
@@ -506,6 +506,7 @@ $id = $_SESSION["email"]
         </div>
       </div>
     </div>
+    <div style="margin: 0px 0px 100px 0px;"></div>
     <div class="footer">.</div> 
     <script src="./dashboard_admin.js"></script>
   </body>
