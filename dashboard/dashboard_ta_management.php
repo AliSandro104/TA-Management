@@ -2,14 +2,40 @@
 // Start the session
 session_start();
 
-$id = $_SESSION["email"]
+$id = $_SESSION["email"];
+$input = $_POST['course'];
+$string_array = explode("|", $input);
+$isProf = false;
+$isProf_js = "no";
 
+if (count($string_array) == 1 ) {
+  // get the TA info needed to delete from the database
+  $servername = "localhost";
+  $username = "root";
+  $password = "";
+  $db = "ta-management";
+  $conn = new mysqli($servername, $username, $password, $db);
+  if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+  }
+  $recordID = $string_array[0];
+  $result = $conn->query("SELECT * FROM ta_history WHERE RecordID=$recordID");
+  $row = mysqli_fetch_assoc($result);
+  $term = $row['TermYear'];
+  $selected_course = $row['CourseNumber'];
+  $conn->close();
+} else {
+  $selected_course = $string_array[0];
+  $term = $string_array[1] . " " . $string_array[2];
+  $isProf = true;
+  $isProf_js = "yes";
+}
 ?>
 
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Sysop Tasks</title>
+    <title>TA Management</title>
     <link href="dashboard.css" rel="stylesheet" />
     <link rel="icon" href="../media/favicon.ico" type="image/ico">
     <link
@@ -32,6 +58,9 @@ $id = $_SESSION["email"]
         background-color: #DC241F;
         color:#DC241F;
         text-align: center;
+      }
+      .prof {
+        display: block;
       }
     </style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -62,74 +91,6 @@ $id = $_SESSION["email"]
 
 
   </head>
-
-
-  <?php
-  /* 
-session_start();
-
-
-if (array_key_exists("email", $_SESSION)) {
-    $servername = "localhost"; // Change accordingly
-    $username = "root"; // Change accordingly
-    $password = ""; // Change accordingly
-    $db = "users"; // Change accordingly
-
-    // Create connection
-    $conn = new mysqli($servername, $username, $password, $db);
-    $sql = $conn->prepare("SELECT * FROM User WHERE email = ?");
-    $sql->bind_param('s', $_SESSION['email']);
-    $sql->execute();
-    $result = $sql->get_result();
-    $user = $result->fetch_assoc();
-
-    $sql = $conn->prepare("SELECT UserType.userType FROM UserType INNER JOIN User_UserType 
-            ON UserType.idx=User_UserType.userTypeId WHERE User_UserType.userId = ?");
-    $sql->bind_param('s', $_SESSION['email']);
-    $sql->execute();
-    $result = $sql->get_result();
-    $userTypes = $result->fetch_all();
-    $conn->close();
-
-    $username = $user[0] . ' ' . $user[1];
-    echo "$username"
-
-    echo '<div class="welcomeMessage">
-                Welcome '. $user['firstName'] . '!</div>';
-    if (in_array("sysop", $userTypes[0])) {
-        echo '<div class = "section">
-            <div class="title">
-                <i class="fa fa-cog" aria-hidden="true" style="color: rgb(167, 37, 48)"></i>
-                System operator
-            </div>
-            <ul>
-                <li>
-                    Manage user accounts
-                </li>
-                <li>
-                    Add or remove professors or courses
-                </li>
-                <li>
-                    Manage system manually or using a CSV file
-                </li>
-            </ul>
-            
-            <a class="option" onclick="menuItemSelected(\'system\')" href="../sysop_tasks/manage_users.html">
-                Manage users
-            </a>
-            <a class="option" onclick="menuItemSelected(\'system\')" href="../sysop_tasks/importProf.html">
-                Quick import prof/course
-            </a>
-        </div>';
-    }
-} else {
-    echo '<div class="welcomeMessage">
-                Logging out..
-            </div>';
-}
-*/
-?>
-
   <body>
     <script src="./manage_users.js"></script>
     <script src="./manage_courses.js"></script>
@@ -214,588 +175,80 @@ if (array_key_exists("email", $_SESSION)) {
       </nav>
       <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
+          <!-- TA performance log - Displayed for a prof only -->
+        <a
+            class="nav-item nav-link prof"
+            data-toggle="tab"
+            href="#nav-log"
+            role="tab"
+            >TA performance log</a
+          >
+          <!-- All TAs report - Displayed for a prof only -->
+          <a
+            class="nav-item nav-link prof"
+            data-toggle="tab"
+            href="#nav-wishlist"
+            role="tab"
+            >TA wishlist</a
+          >
+           <!-- Office Hours -->
+          <a
+            class="nav-item nav-link"
+            data-toggle="tab"
+            href="#nav-office"
+            role="tab"
+            >Office Hours</a
+          >
+          <!-- Channel -->
           <a
             class="nav-item nav-link active"
             data-toggle="tab"
-            href="#nav-profs"
+            href="#nav-channel"
             role="tab"
-            >Professors</a
+            >Channel</a
           >
+          <!-- All TAs Report - Displayed for a prof only -->
           <a
-            class="nav-item nav-link"
+            class="nav-item nav-link prof"
             data-toggle="tab"
-            href="#nav-courses"
+            href="#nav-report"
             role="tab"
-            >Courses</a
-          >
-          <a
-            class="nav-item nav-link"
-            data-toggle="tab"
-            href="#nav-users"
-            role="tab"
-            >Users</a
+            >All TAs Report</a
           >
         </div>
       </nav>
       <div class="tab-content" id="nav-tabContent">
         <br />
-        <!-- Professors -->
-        <div class="tab-pane fade show active" id="nav-profs" role="tabpanel">
-          <div>
-            <!-- Import Professors -->
-            <button
-              type="button"
-              class="btn btn-outline-secondary"
-              data-toggle="modal"
-              data-target="#import-profs"
-            >
-              <i class="fa fa-download"></i>
-              Import
-            </button>
-            <div
-              class="modal fade"
-              id="import-profs"
-              tabindex="-1"
-              role="dialog"
-            >
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <form
-                    id="upload-prof-form"
-                    action="javascript:saveMultipleProfAccounts()"
-                    method="post"
-                  >
-                    <div class="modal-header">
-                      <h3 class="modal-title">Import Professors</h3>
-                      <button
-                        type="button"
-                        class="close"
-                        data-dismiss="modal"
-                        aria-label="Close"
-                      >
-                        <i class="fa fa-close"></i>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                      <input id="prof-upload-csv" type="file" />
-                    </div>
-                    <div class="modal-footer">
-                      <input
-                        type="button"
-                        class="btn btn-light"
-                        data-dismiss="modal"
-                        value="Cancel"
-                      />
-                      <input type="submit" class="btn btn-light" value="Save" />
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-
-            <!-- Add Professors -->
-            <br />
-            <br />
-            <div class="container d-flex flex-row">
-              <div class="row">
-                <div class="col-auto mr-auto">
-                  <h2 id="title">All Professors</h2>
-                </div>
-              </div>
-              <div class="col-auto align-self-center">
-                <button
-                  type="button"
-                  class="btn btn-light"
-                  data-toggle="modal"
-                  data-target="#add-new-prof"
-                >
-                  <i class="fa fa-plus" style="font-size: 24px"></i>
-                </button>
-                <div
-                  class="modal fade"
-                  id="add-new-prof"
-                  tabindex="-1"
-                  role="dialog"
-                >
-                  <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                      <form
-                        id="add-profs-form"
-                        action="javascript:saveProfAccount()"
-                        method="post"
-                      >
-                        <div class="modal-header">
-                          <h3 class="modal-title">Add a Professor</h3>
-                          <button
-                            class="close"
-                            data-dismiss="modal"
-                            aria-label="Close"
-                          >
-                            <i class="fa fa-close"></i>
-                          </button>
-                        </div>
-
-                        <div class="modal-body">
-                          <div id="prof-form-modal">
-                            <input
-                              class="form-control"
-                              placeholder="Instructor Email"
-                              type="text"
-                              name="inst-email"
-                            /><br />
-                            <select class="form-control" name="faculty">
-                              <option value="" selected disabled>
-                                Select a Faculty...
-                              </option>
-                              <option value="Science">Science</option>
-                              <option value="Engineering">Engineering</option>
-                              <option value="Arts">Arts</option></select
-                            ><br />
-                            <select class="form-control" name="dept">
-                              <option value="" selected disabled>
-                                Select a Department...
-                              </option>
-                              <option value="Computer Science">
-                                Computer Science
-                              </option>
-                              <option value="Mathematics">Mathematics</option>
-                              <option value="Physics">Physics</option></select
-                            ><br />
-                            <input
-                              class="form-control"
-                              placeholder="Course Number"
-                              type="text"
-                              name="crn-num"
-                            /><br />
-                            <div id="prof-error-msg-cont"></div>
-                          </div>
-                        </div>
-
-                        <div class="modal-footer">
-                          <input
-                            type="button"
-                            class="btn btn-light"
-                            data-dismiss="modal"
-                            value="Cancel"
-                          />
-                          <input
-                            type="submit"
-                            class="btn btn-light"
-                            data-dismiss="modal"
-                            value="Save"
-                          />
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <br />
-
-            <!-- Display Professors -->
-            <div id="profs-table"></div>
-          </div>
+        <!-- TA performance log - Displayed for a prof only -->
+        <div class="tab-pane fade show active" id="nav-log" role="tabpanel">
         </div>
 
-        <!-- Courses -->
-        <div class="tab-pane fade" id="nav-courses" role="tabpanel">
-          <div>
-            <!-- Import Courses -->
-            <button
-              type="button"
-              class="btn btn-outline-secondary"
-              data-toggle="modal"
-              data-target="#import-courses"
-            >
-              <i class="fa fa-download"></i>
-              Import
-            </button>
-            <div
-              class="modal fade"
-              id="import-courses"
-              tabindex="-1"
-              role="dialog"
-            >
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <form
-                    id="upload-course-form"
-                    action="javascript:saveMultipleCourses()"
-                    method="post"
-                  >
-                    <div class="modal-header">
-                      <h3 class="modal-title">Import Courses</h3>
-                      <button
-                        type="button"
-                        class="close"
-                        data-dismiss="modal"
-                        aria-label="Close"
-                      >
-                        <i class="fa fa-close"></i>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                      <input id="course-upload-csv" type="file" />
-                    </div>
-                    <div class="modal-footer">
-                      <input
-                        type="button"
-                        class="btn btn-light"
-                        data-dismiss="modal"
-                        value="Cancel"
-                      />
-                      <input
-                        type="submit"
-                        class="btn btn-light"
-                        data-dismiss="modal"
-                        value="Save"
-                      />
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-
-            <!-- Add Courses -->
-            <br />
-            <br />
-            <div class="container d-flex flex-row">
-              <div class="row">
-                <div class="col-auto mr-auto">
-                  <h2 id="title">All Courses</h2>
-                </div>
-              </div>
-              <div class="col-auto align-self-center">
-                <button
-                  type="button"
-                  class="btn btn-light"
-                  data-toggle="modal"
-                  data-target="#add-new-course"
-                >
-                  <i class="fa fa-plus" style="font-size: 24px"></i>
-                </button>
-                <div
-                  class="modal fade"
-                  id="add-new-course"
-                  tabindex="-1"
-                  role="dialog"
-                >
-                  <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                      <form
-                        id="add-course-form"
-                        action="javascript:saveCourse()"
-                        method="post"
-                      >
-                        <div class="modal-header">
-                          <h3 class="modal-title">Add a Course</h3>
-                          <button
-                            class="close"
-                            data-dismiss="modal"
-                            aria-label="Close"
-                          >
-                            <i class="fa fa-close"></i>
-                          </button>
-                        </div>
-
-                        <div class="modal-body">
-                          <div id="course-form-modal">
-                            <input
-                              class="form-control"
-                              placeholder="Please enter the course number."
-                              type="text"
-                              name="crn-number"
-                            /><br />
-                            <input
-                              class="form-control"
-                              placeholder="Please enter the course name."
-                              type="text"
-                              name="crn-name"
-                            /><br />
-                            <input
-                              class="form-control"
-                              placeholder="Please enter the course description."
-                              type="text"
-                              name="crn-dscrpn"
-                            /><br />
-                            <input
-                              class="form-control"
-                              placeholder="Please enter the course term."
-                              type="text"
-                              name="crn-term"
-                            /><br />
-                            <input
-                              class="form-control"
-                              placeholder="Please enter the course year."
-                              type="text"
-                              name="crn-year"
-                            /><br />
-                            <input
-                              class="form-control"
-                              placeholder="Please enter the course instructor's email."
-                              type="text"
-                              name="crn-email"
-                            /><br />
-                            <div id="course-error-msg-cont"></div>
-                          </div>
-                        </div>
-
-                        <div class="modal-footer">
-                          <input
-                            type="button"
-                            class="btn btn-light"
-                            data-dismiss="modal"
-                            value="Cancel"
-                          />
-                          <input
-                            type="submit"
-                            class="btn btn-light"
-                            data-dismiss="modal"
-                            value="Save"
-                          />
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <br />
-
-            <!-- Display Courses -->
-            <div id="course-table"></div>
-          </div>
+        <!-- All TAs report - Displayed for a prof only -->
+        <div class="tab-pane fade" id="nav-wishlist" role="tabpanel">
         </div>
 
-        <!-- Users -->
-        <div class="tab-pane fade" id="nav-users" role="tabpanel">
-          <!-- Import Users -->
-          <button
-            type="button"
-            class="btn btn-outline-secondary"
-            data-toggle="modal"
-            data-target="#import-users"
-          >
-            <i class="fa fa-download"></i>
-            Import
-          </button>
-          <div class="modal fade" id="import-users" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <form
-                  id="upload-user-form"
-                  action="javascript:saveMultipleNewAccounts()"
-                  method="post"
-                >
-                  <div class="modal-header">
-                    <h3 class="modal-title">Import Users</h3>
-                    <button
-                      type="button"
-                      class="close"
-                      data-dismiss="modal"
-                      aria-label="Close"
-                    >
-                      <i class="fa fa-close"></i>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                    <input id="user-upload-csv" type="file" />
-                  </div>
-                  <div class="modal-footer">
-                    <input
-                      type="button"
-                      class="btn btn-light"
-                      data-dismiss="modal"
-                      value="Cancel"
-                    />
-                    <input type="submit" class="btn btn-light" value="Save" />
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-
-          <!-- Add Users -->
-          <br />
-          <br />
-          <div class="container d-flex flex-row">
-            <div class="row">
-              <div class="col-auto mr-auto">
-                <h2 id="title">All Users</h2>
-              </div>
-              <div class="col-auto align-self-center">
-                <!-- Add Users -->
-                <button
-                  type="button"
-                  class="btn btn-light"
-                  data-toggle="modal"
-                  data-target="#add-new-user"
-                >
-                  <i class="fa fa-plus" style="font-size: 24px"></i>
-                </button>
-                <div
-                  class="modal fade"
-                  id="add-new-user"
-                  tabindex="-1"
-                  role="dialog"
-                >
-                  <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                      <form
-                        id="add-user-form"
-                        action="javascript:saveNewAccount()"
-                        method="post"
-                      >
-                        <div class="modal-header">
-                          <h3 class="modal-title">Add a User</h3>
-                          <button
-                            class="close"
-                            data-dismiss="modal"
-                            aria-label="Close"
-                          >
-                            <i class="fa fa-close"></i>
-                          </button>
-                        </div>
-                        <div class="modal-body">
-                          <div id="account-info">
-                            <input
-                              class="form-control"
-                              placeholder="Enter the first name of the user"
-                              type="text"
-                              name="first-name"
-                            /><br />
-                            <input
-                              class="form-control"
-                              placeholder="Enter the last name of the user"
-                              type="text"
-                              name="last-name"
-                            /><br />
-                            <input
-                              class="form-control"
-                              placeholder="abc@xyz.com"
-                              type="email"
-                              name="email"
-                            /><br />
-                            <input
-                              class="form-control"
-                              placeholder="Enter temporary password"
-                              type="password"
-                              name="pwd"
-                            /><br />
-                            <div class="container">
-                              <div class="flex-row">
-                                <div class="d-flex justify-content-between">
-                                  <div>
-                                    <input
-                                      type="checkbox"
-                                      class="form-check-input"
-                                      name="student"
-                                      value="student"
-                                    />
-                                    <label
-                                      class="form-check-label"
-                                      for="student"
-                                      >Student</label
-                                    >
-                                  </div>
-                                  <div>
-                                    <input
-                                      type="checkbox"
-                                      name="professor"
-                                      value="professor"
-                                    />
-                                    <label
-                                      class="form-check-label"
-                                      for="professor"
-                                      >Professor</label
-                                    >
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="flex-row">
-                                <div class="d-flex justify-content-between">
-                                  <div>
-                                    <input
-                                      class="form-check-input"
-                                      type="checkbox"
-                                      name="admin"
-                                      value="admin"
-                                    />
-                                    <label class="form-check-label" for="admin"
-                                      >TA Administrator</label
-                                    >
-                                  </div>
-                                  <div>
-                                    <input
-                                      class="form-check-input"
-                                      type="checkbox"
-                                      name="ta"
-                                      value="ta"
-                                    />
-                                    <label class="form-check-label" for="ta"
-                                      >Teaching Assistant</label
-                                    >
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="flex-row">
-                                <div class="d-flex justify-content-between">
-                                  <div>
-                                    <input
-                                      class="form-check-input"
-                                      type="checkbox"
-                                      name="sysop"
-                                      value="sysop"
-                                    />
-                                    <label class="form-check-label" for="sysop"
-                                      >System Operator</label
-                                    >
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div id="error-msg-cont"></div>
-                          </div>
-                        </div>
-                        <div class="modal-footer">
-                          <input
-                            type="button"
-                            class="btn btn-light"
-                            data-dismiss="modal"
-                            value="Cancel"
-                          />
-                          <input
-                            type="submit"
-                            class="btn btn-light"
-                            value="Save"
-                          />
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <br />
-
-          <!-- Display Users -->
-          <div id="user-table"></div>
+        <!-- Office Hours -->
+        <div class="tab-pane fade" id="nav-office" role="tabpanel">
         </div>
-      </div>
+        
+        <!-- Channel -->
+        <div class="tab-pane fade" id="nav-channel" role="tabpanel">
+        </div>
+        
+        <!-- All TAs Report - Displayed for a prof only -->
+        <div class="tab-pane fade" id="nav-report" role="tabpanel">
+        </div>
     </div>
     <div class="footer">.</div> 
     <script>
-      function loadExistingData() {
-        getProfAccounts();
-        getCourses();
-        getAccounts();
+      var isProf = "<?php echo $isProf_js; ?>";
+      if (isProf == "no") {
+        var classes = document.getElementsByClassName('prof');
+        console.log(classes);
+        for (var i = 0; i < classes.length; i++) {
+          classes[i].style.display = 'none';
+        }
       }
-      document.onload = loadExistingData();
     </script>
   </body>
 </html>

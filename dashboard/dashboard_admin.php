@@ -270,7 +270,7 @@ $id = $_SESSION["email"]
           </div>
         </div>
           <!-- View the TA info on this page -->
-          <h1 style="margin-top: 20px;">Click on a TA to view their application info</h1>
+          <div style="text-align: center;"><h3 style="margin-top: 20px; color: #a72530">Click on a TA to view their application</h3></div>
           <?php
             // Create connection
             $conn = new mysqli("localhost", "root", "", "ta-management");
@@ -305,7 +305,7 @@ $id = $_SESSION["email"]
         </div>
         <div class="tab-pane fade" id="nav-ta-history" role="tabpanel">
           <!-- View the TA history on this page -->
-        <h1 style="margin-top: 20px;">Click on a TA to view their history</h1>
+        <div style="text-align: center;"><h3 style="margin-top: 20px; color: #a72530">Click on a TA to view their history</h3></div>
         <?php
             // Create connection
             $conn = new mysqli("localhost", "root", "", "ta-management");
@@ -322,12 +322,35 @@ $id = $_SESSION["email"]
               <p><b>Legal name: </b><?php echo $row['LegalName']?></p>
               <p><b>Student ID: </b><?php echo $row['StudentID']?></p>
               <p><b>Email: </b><?php echo $row['Email']?></p>
-              <h3 style="margin: 30px 0px 20px 0px;"><?php echo $row['LegalName']?>'s TA Record</h3>
+              <h3 style="margin: 50px 0px 20px 0px;">TA Record</h3>
               <?php
               $email = $row['Email'];
               $result1 = $conn -> query("SELECT * FROM ta_history WHERE TAEmail='$email' ORDER BY TermYear");
               while($row1 = mysqli_fetch_array($result1)) { ?>
               <p><b><?php echo $row1['TermYear'] . ": " ?></b><?php echo $row1['CourseNumber']?></p>
+              <?php
+                }
+              ?>
+              <h3 style="margin: 50px 0px 20px 0px;">Ratings</h3>
+              <?php
+              $average = 0;
+              $counter = 0;
+              $email = $row['Email'];
+              $result2 = $conn -> query("SELECT * FROM ta_rating WHERE rating_for='$email'");
+              while($row2 = mysqli_fetch_array($result2)) {
+                $counter = $counter + 1;
+                $average = $average + $row2['rating'];
+              }
+              echo "<p><b>Average rating: </b>"; 
+              if (mysqli_num_rows($result2) > 0) {
+                $average = $average / $counter;
+                echo "<b>" . $average . "/5</b></p>"; 
+              } ?>
+              <?php
+              $result2 = $conn -> query("SELECT * FROM ta_rating WHERE rating_for='$email'");
+              while($row2 = mysqli_fetch_array($result2)) { ?>
+              <p><?php echo "<b>Comment by " . $row2['rated_by'] . " in " . $row2['course'] . " - " . $row2['term'] . " " . $row2['year'] . ": " . "</b>" . "<i>" . $row2['comment'] . "</i>"; ?></p>
+              <p></p>
               <?php
                 }
               ?>
@@ -383,7 +406,7 @@ $id = $_SESSION["email"]
           </div>
         </div>
             <!-- View the list of courses on this page -->
-            <h1 style="margin-top: 20px;">List of courses</h1>
+            <div style="text-align: center;"><h3 style="margin-top: 20px; color: #a72530">Click on a course for more info</h3></div>
             <?php
                 // Create connection
                 $conn = new mysqli("localhost", "root", "", "ta-management");

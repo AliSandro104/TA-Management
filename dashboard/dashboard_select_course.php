@@ -163,10 +163,10 @@ $id = $_SESSION["email"]
           
                 if(mysqli_num_rows($query_run) > 0)
                 {
-          
+                    // if the user is a prof, show him all the courses in which they were an instructor (data taken from the course database)
                     while ($row = $query_run->fetch_assoc()){
           
-                      if ($row['userTypeId'] == 2){
+                      if ($row['userTypeId'] == 3){
                         $query1 = "SELECT * FROM ta_history WHERE TAEmail = '$id'";
                         $query_run1 = mysqli_query($conn, $query1);
           
@@ -178,13 +178,14 @@ $id = $_SESSION["email"]
                         <?php }
                         }
                       }
-                      else if ($row['userTypeId'] == 3 ) {
+                      // if the user is a TA, show him all the courses for which he was TA in the past and the ones for which he is currently assigned as TA (data taken from the ta_history database)
+                      else if ($row['userTypeId'] == 2 ) {
                         $query2 = "SELECT * FROM course WHERE courseInstructor = '$id'";
                         $query_run2 = mysqli_query($conn, $query2);
           
                         if(mysqli_num_rows($query_run2) > 0) { 
                           while ($row2 = $query_run2->fetch_assoc()) { ?>
-                            <option value="<?php echo $row2['courseNumber'] . "|" . $row2['term']; ?>">
+                            <option value="<?php echo $row2['courseNumber'] . "|" . $row2['term'] . "|" . $row2['year']; ?>">
                             <?php echo $row2['courseNumber'] . " - " . $row2['term'] . " " . $row2['year'] . " as Prof"; ?>
                             </option>
                         <?php }
