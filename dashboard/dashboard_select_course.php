@@ -2,7 +2,12 @@
 // Start the session
 session_start();
 
-$id = $_SESSION["email"]
+$id = $_SESSION["email"];
+
+$conn = mysqli_connect("localhost","root","","ta-management");
+if ($conn -> connect_error){
+  die ("Connection failed: " . $conn->connect_error);
+}
 
 ?>
 
@@ -29,6 +34,7 @@ $id = $_SESSION["email"]
     <link rel="stylesheet" href="dashboard_select_course.css">
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <!-- script to redirect the user to the appropriate page -->
     <script>
         jQuery(function($) {
         $("#jquery-select").on('change', function() {
@@ -83,29 +89,19 @@ $id = $_SESSION["email"]
               style="width: 14rem; height: auto"
               alt="mcgill-logo"
             /></a>
+            <!-- code to show the user which webpages they have access to -->
             <select class="custom-select" id = "jquery-select">
                 <option value="0" selected="selected"  >Dashboard</option>
                 <option value="1" selected="selected"  >Rate a TA</option>
 
                 <?php
-
-                    $conn = mysqli_connect("localhost","root","","ta-management");
-
-                    if ($conn -> connect_error){
-                    die ("Connection failed: " . $conn->connect_error);
-                    }
-
-                
                     $query = "SELECT MAX(userTypeId) FROM user_usertype WHERE userId = '$id'";
                     $query_run = mysqli_query($conn, $query);
               
-              
                     if(mysqli_num_rows($query_run) > 0)
-                    {
-              
+                    {           
                       //while ($row = mysqli_fetch_array($result)){
                         while ($row = $query_run->fetch_assoc()){
-                          
                           
                           if ($row['MAX(userTypeId)'] == 5){
                             echo '<option value="2" selected="selected"  >TA management </option>';
@@ -124,7 +120,6 @@ $id = $_SESSION["email"]
                            }
                     }
                 }
-
                 ?>
                 <option hidden disabled selected value> -- change page -- </option>
             </select>
@@ -142,27 +137,18 @@ $id = $_SESSION["email"]
               </button>
           </div>
         </div>
-      </nav>
-      
+      </nav> 
       <br><br>
       
       <div class="form-container" id="form1">
         <form action="dashboard_ta_management.php" method="post">
           <h1> TA Management </h1>
-
           <br><br>
-
-          <!-- Select Course -->
-                  
+          <!-- Select Course -->      
           <label for ="course"><h5>Select the course you would like to see</h5></label><br>
               
             <select name="course">
               <?php
-                $conn = mysqli_connect("localhost","root","","ta-management");
-
-                if ($conn -> connect_error){
-                die ("Connection failed: " . $conn->connect_error);
-                }
             
                 $query = "SELECT userTypeId FROM user_usertype WHERE userId = '$id'";
                 $query_run = mysqli_query($conn, $query);
@@ -201,12 +187,11 @@ $id = $_SESSION["email"]
             }
             ?>
             </select>
+            <br>
             <button type="submit" class ="confirm-btn" id="confirm-btn" name="confirm" style="margin:50px 0px 0px 0px;">Confirm selection</button> <br><br>
             </div>
         </form>
       </div>
         <div class="footer">.</div> 
-
   </body>
-
 </html>

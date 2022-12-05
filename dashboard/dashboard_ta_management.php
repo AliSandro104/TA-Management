@@ -18,13 +18,14 @@ $isProf = false;
 $isProf_js = "no";
 
 if (count($string_array) == 1 ) {
-  // get the TA info needed to delete from the database
+  // check if user is a TA
   $recordID = $string_array[0];
   $result = $conn->query("SELECT * FROM ta_history WHERE RecordID=$recordID");
   $row = mysqli_fetch_assoc($result);
   $term = $row['TermYear'];
   $selected_course = $row['CourseNumber'];
 } else {
+  // user is a prof
   $selected_course = $string_array[0];
   $term = $string_array[1] . " " . $string_array[2];
   $isProf = true;
@@ -90,6 +91,7 @@ if (count($string_array) == 1 ) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <!-- script to redirect the user to the appropriate page -->
     <script>
         jQuery(function($) {
         $('#jquery-select').on('change', function() {
@@ -144,31 +146,20 @@ if (count($string_array) == 1 ) {
               style="width: 14rem; height: auto"
               alt="mcgill-logo"
             /></a>
+            <!-- code to show the user which webpages they have access to -->
             <select class="custom-select" id= "jquery-select">
             
                 <option value="0" selected="selected"  >Dashboard</option>
                 <option value="1" selected="selected"  >Rate a TA </option>
 
                 <?php
-
-                    $conn = mysqli_connect("localhost","root","","ta-management");
-
-                    if ($conn -> connect_error){
-                    die ("Connection failed: " . $conn->connect_error);
-                    }
-
-                
                     $query = "SELECT MAX(userTypeId) FROM user_usertype WHERE userId = '$id'";
                     $query_run = mysqli_query($conn, $query);
               
-              
                     if(mysqli_num_rows($query_run) > 0)
                     {
-              
-                      //while ($row = mysqli_fetch_array($result)){
                         while ($row = $query_run->fetch_assoc()){
-                          
-                          
+
                           if ($row['MAX(userTypeId)'] == 5){
                             echo '<option value="2" selected="selected"  >TA management </option>';
                             echo '<option value="4" selected="selected"   >TA administration</option>';
@@ -185,7 +176,6 @@ if (count($string_array) == 1 ) {
                           }
                     }
                 }
-
                 ?>
                 <option hidden disabled selected value> -- change page -- </option>
             </select>
@@ -280,6 +270,7 @@ if (count($string_array) == 1 ) {
                     ?>
                   </select>
                   <br><br>
+                  <!-- Add comment -->
                   <textarea name = "comment" class="comment" placeholder = "Leave a comment here."></textarea>
                   <br><br>            
                   <button type="submit" class ="confirm-btn" id="confirm-btn" name="submit" >Submit</button> <br><br>
@@ -379,6 +370,7 @@ if (count($string_array) == 1 ) {
     </div>
     <div class="footer">.</div> 
     <script>
+      // show certain navigation options only to a prof user
       var isProf = "<?php echo $isProf_js; ?>";
       if (isProf == "no") {
         var classes = document.getElementsByClassName('prof');

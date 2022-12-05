@@ -1,1 +1,1 @@
-# SOCS TA Record Board 
+Team Member Names: Ali Hazime, Moustapha Moumneh, Hai Thien Doan Nguyen
