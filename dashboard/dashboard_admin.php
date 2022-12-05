@@ -477,7 +477,7 @@ if ($conn -> connect_error){
                 <input style="display: none;" type="text" name="term" value="<?php echo $term_year; ?>">
                 <?php $result2 = $conn -> query("SELECT Email FROM ta_cohort WHERE TermYear = '$term_year' AND TAName NOT IN (SELECT TAName from ta_assigned WHERE TermYear = '$term_year')"); ?>
                 <i>Choose a TA to add:</i>
-                <select style="width:auto;" name="chosenTA" class="custom-select">
+                <select style="width:auto;" name="chosenTA" class="custom-select" required>
             <?php
                 while($row2 = mysqli_fetch_array($result2)) {
             ?>   
@@ -491,7 +491,7 @@ if ($conn -> connect_error){
                 <?php $result3 = $conn -> query("SELECT CourseNumber FROM courses_quota WHERE (TermYear = '$term_year' AND PositionsToAssign > 0)"); ?>
                 <p></p>
                 <i>Choose a course for the TA:</i>
-                <select style="width:auto;" name="chosenCourse" class="custom-select">
+                <select style="width:auto;" name="chosenCourse" class="custom-select" required>
             <?php
                 while($row3 = mysqli_fetch_array($result3)) {
             ?>   
@@ -517,7 +517,7 @@ if ($conn -> connect_error){
             <form action="../cgi_bin/remove_ta_from_course.php" method="post">
               <p></p>
               <i>Choose which TA to remove: </i>
-              <select style="width:auto;" class="custom-select" name="chosenID">
+              <select style="width:auto;" class="custom-select" name="chosenID" required>
             <?php
                 while($row4 = mysqli_fetch_array($result4)) {
             ?>   

@@ -100,7 +100,6 @@ if ($conn -> connect_error){
               
                     if(mysqli_num_rows($query_run) > 0)
                     {           
-                      //while ($row = mysqli_fetch_array($result)){
                         while ($row = $query_run->fetch_assoc()){
                           
                           if ($row['MAX(userTypeId)'] == 5){
@@ -147,7 +146,7 @@ if ($conn -> connect_error){
           <!-- Select Course -->      
           <label for ="course"><h5>Select the course you would like to see</h5></label><br>
               
-            <select name="course">
+            <select name="course" required>
               <?php
             
                 $query = "SELECT userTypeId FROM user_usertype WHERE userId = '$id'";
@@ -155,22 +154,35 @@ if ($conn -> connect_error){
           
                 if(mysqli_num_rows($query_run) > 0)
                 {
-                    // if the user is a prof, show him all the courses in which they were an instructor (data taken from the course database)
                     while ($row = $query_run->fetch_assoc()){
-          
-                      if ($row['userTypeId'] == 3){
-                        $query1 = "SELECT * FROM ta_history WHERE TAEmail = '$id'";
+                      
+                      // if the user is an admin or a sysop, show him all the courses in the database and let him enter as a prof
+                      if ($row['userTypeId'] == 4 || $row['userTypeId'] == 5){
+                        $query1 = "SELECT * FROM course";
                         $query_run1 = mysqli_query($conn, $query1);
           
                         if(mysqli_num_rows($query_run1) > 0) { 
                           while ($row1 = $query_run1->fetch_assoc()) { ?>
-                            <option value="<?php echo $row1['RecordID']; ?>">
-                            <?php echo $row1['CourseNumber'] . " - " . $row1['TermYear'] . " as TA"; ?>
+                            <option value="<?php echo $row1['courseNumber'] . "|" . $row1['term'] . "|" . $row1['year']; ?>">
+                            <?php echo $row1['courseNumber'] . " - " . $row1['term'] . " " . $row1['year'] . " as an Admin"; ?>
                             </option>
                         <?php }
                         }
                       }
                       // if the user is a TA, show him all the courses for which he was TA in the past and the ones for which he is currently assigned as TA (data taken from the ta_history database)
+                      else if ($row['userTypeId'] == 3){
+                        $query3 = "SELECT * FROM ta_history WHERE TAEmail = '$id'";
+                        $query_run3 = mysqli_query($conn, $query3);
+          
+                        if(mysqli_num_rows($query_run3) > 0) { 
+                          while ($row3 = $query_run1->fetch_assoc()) { ?>
+                            <option value="<?php echo $row3['RecordID']; ?>">
+                            <?php echo $row3['CourseNumber'] . " - " . $row3['TermYear'] . " as TA"; ?>
+                            </option>
+                        <?php }
+                        }
+                      }
+                      // if the user is a prof, show him all the courses in which they were an instructor (data taken from the course database)
                       else if ($row['userTypeId'] == 2 ) {
                         $query2 = "SELECT * FROM course WHERE courseInstructor = '$id'";
                         $query_run2 = mysqli_query($conn, $query2);

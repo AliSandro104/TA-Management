@@ -25,7 +25,7 @@ if (count($string_array) == 1 ) {
   $term = $row['TermYear'];
   $selected_course = $row['CourseNumber'];
 } else {
-  // user is a prof
+  // else, user is a prof or an admin
   $selected_course = $string_array[0];
   $term = $string_array[1] . " " . $string_array[2];
   $isProf = true;
@@ -239,7 +239,8 @@ if (count($string_array) == 1 ) {
         </div>
       </nav>
       <div class="tab-content" id="nav-tabContent">
-        <br />
+      <br>
+      <h1 style="color: #a72530; font-size:50px;"><?php echo $selected_course . " - " . $term;?></h1>
         <!-- TA performance log - Displayed for a prof only -->
         <div class="tab-pane fade show active prof" id="nav-log" role="tabpanel">
             <div class="form-container" id="form1" style = "background-color='#fff'">
@@ -249,7 +250,7 @@ if (count($string_array) == 1 ) {
                 <!-- SELECT TA -->
                 <label for ="ta"><h5 style="color: #a72530;">Select the TA from the list</h5></label><br>
                     
-                  <select name="TA" id="TA" required class="custom-select" style="width:auto;">
+                  <select name="TA" id="TA" required class="custom-select" style="width:auto;" required>
                     <?php
                       $ta_query = "SELECT * FROM ta_history WHERE CourseNumber='$selected_course' AND TermYear='$term'";
                       
@@ -303,7 +304,7 @@ if (count($string_array) == 1 ) {
                 <!-- SELECT TA -->
                 <label for ="ta"><h5 style="color: #a72530;">Select the TA you wish to have from the list below</h5></label><br>
                     
-                  <select name="TA" id="TA" required class="custom-select" style="width:auto;">
+                  <select name="TA" id="TA" required class="custom-select" style="width:auto;" required>
                     <?php
                       $query = "SELECT firstName, lastName FROM user WHERE email = '$id'";
                       $result = mysqli_query($conn, $query);
