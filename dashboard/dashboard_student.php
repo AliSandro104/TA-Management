@@ -69,6 +69,9 @@
         $("#jquery-select").on('change', function() {
             var url = $(this).val();
 
+            if($(this).val()=="0")
+            window.location = "dashboard.php" 
+
             if($(this).val()=="1")
             window.location = "dashboard_student.php" 
             
@@ -109,13 +112,14 @@
         <div class="container-fluid">
           <!-- Logo and User Role  -->
           <div class="d-flex align-items-center">
+          <a href="./dashboard.php">
             <img
               src="../media/mcgill_logo.png"
               style="width: 14rem; height: auto"
               alt="mcgill-logo"
-            />
+            /></a>
             <select class="custom-select" id = "jquery-select">
-                
+                <option value="0" selected="selected"  >Dashboard</option>
                 <option value="1" selected="selected"  >Rate a TA</option>
 
                 <?php
@@ -161,16 +165,18 @@
             </select>
           </div>
           <!-- Logout -->
-          <div>
-            <button
-              type="button"
-              class="btn btn-link"
-              onclick="window.location.replace('../logout/logout.html')"
-            >
-              <i class="fa fa-sign-out" style="font-size: 24px"></i>
-            </button>
+          <div style="display:flex;">
+            <div style="font-size:24px; color: #007bff;"><?php echo $id ?></div>
+            <div style="float:right;">
+              <button
+                type="button"
+                class="btn btn-link"
+                onclick="window.location.replace('../logout/logout.html')"
+              >
+                <i class="fa fa-sign-out" style="font-size: 24px; color: #007bff;"></i>
+              </button>
+            </div>
           </div>
-        </div>
       </nav>
               </div>
       
@@ -212,7 +218,7 @@
                         
                         $ta_val= $email .' ' . $course . ' ' . $term . ' ' .$year;
 
-                        echo "<option selected value= '$ta_val'/> $fname $lname $course/$term/$year <br>";
+                        echo "<option value= '$ta_val'/> $fname $lname $course/$term $year <br>";
                     }
                 }
                 else

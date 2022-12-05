@@ -83,17 +83,17 @@ $id = $_SESSION["email"]
 
     <div>
     <div style="text-align:right; width:100%; font-size:20px">
-      <nav >
+      <nav style="display:flex;">
+      <div style="width:95%; font-size:32px; color: #007bff;"><?php echo $id ?></div>
           <!-- Logout -->
-          <div>
+          <div style="width:5%; float:right;">
             <button
               type="button"
               class="btn btn-link"
               onclick="window.location.replace('../logout/logout.html')"
-              > <div style= "font-size:20px">logout</div>
-              <i class="fa fa-sign-out" style="font-size: 32px"></i>
+              >
+              <i class="fa fa-sign-out" style="font-size: 32px; color: #007bff;"></i>
             </button>
-          </div>
         </div>
       </nav>
 
@@ -131,7 +131,7 @@ $id = $_SESSION["email"]
 
       ?>
 
-      <select class="custom-select" id="jquery-select" style="width: auto;">
+      <select class="custom-select" id="jquery-select" style="width: auto; height: auto;">
 
 
       <option value="1" selected="selected"  >Rate a TA</option>

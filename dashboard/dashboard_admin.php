@@ -27,20 +27,23 @@ $id = $_SESSION["email"]
       $('#jquery-select').on('change', function() {
       var url = $(this).val();
 
+      if($(this).val()=="0")
+        window.location = "dashboard.php" 
+
       if($(this).val()=="1")
-            window.location = "dashboard_student.php" 
+        window.location = "dashboard_student.php" 
           
-          if($(this).val()=="2")
-          window.location = "dashboard_select_course.php" 
+      if($(this).val()=="2")
+        window.location = "dashboard_select_course.php" 
 
-          if($(this).val()=="3")
-          window.location = "dashboard_select_course.php" 
+      if($(this).val()=="3")
+        window.location = "dashboard_select_course.php" 
 
-          if($(this).val()=="4")
-          window.location = "dashboard_admin.php" 
+      if($(this).val()=="4")
+        window.location = "dashboard_admin.php" 
 
-          if($(this).val()=="5")
-          window.location = "dashboard_sysop.php" 
+      if($(this).val()=="5")
+        window.location = "dashboard_sysop.php" 
     });
   });
     </script>
@@ -137,13 +140,15 @@ $id = $_SESSION["email"]
         <div class="container-fluid">
           <!-- Logo and User Role  -->
           <div class="d-flex align-items-center">
+            <a href="./dashboard.php">
             <img
               src="../media/mcgill_logo.png"
               style="width: 14rem; height: auto"
               alt="mcgill-logo"
-            />
+            /></a>
             <!-- code to show the user which webpages they have access to -->
             <select class="custom-select" id="jquery-select">
+              <option value="0" selected="selected"  >Dashboard</option>
               <option value="1" selected="selected"  >Rate a TA</option>
               
               <?php
@@ -184,14 +189,17 @@ $id = $_SESSION["email"]
             </select>
           </div>
           <!-- Logout -->
-          <div>
-            <button
-              type="button"
-              class="btn btn-link"
-              onclick="window.location.replace('../logout/logout.html')"
-            >
-              <i class="fa fa-sign-out" style="font-size: 24px"></i>
-            </button>
+          <div style="display:flex;">
+            <div style="font-size:24px; color: #007bff;"><?php echo $id ?></div>
+            <div style="float:right;">
+              <button
+                type="button"
+                class="btn btn-link"
+                onclick="window.location.replace('../logout/logout.html')"
+              >
+                <i class="fa fa-sign-out" style="font-size: 24px; color: #007bff;"></i>
+              </button>
+            </div>
           </div>
         </div>
       </nav>
@@ -316,7 +324,7 @@ $id = $_SESSION["email"]
             $result = $conn -> query("SELECT * FROM ta_cohort GROUP BY Email");
               while($row = mysqli_fetch_array($result)) {
           ?>
-            <!-- Get the info from the ta_cohort database -->
+            <!-- Get the info from the ta_history database -->
             <button class="accordion"><?php echo $row['TAName']?></button>
             <div class="panel" style="margin-top: 20px;">
               <p><b>Legal name: </b><?php echo $row['LegalName']?></p>
@@ -331,6 +339,7 @@ $id = $_SESSION["email"]
               <?php
                 }
               ?>
+              <!-- Get the student ratings from the database> -->
               <h3 style="margin: 50px 0px 20px 0px;">Ratings</h3>
               <?php
               $average = 0;
@@ -349,7 +358,18 @@ $id = $_SESSION["email"]
               <?php
               $result2 = $conn -> query("SELECT * FROM ta_rating WHERE rating_for='$email'");
               while($row2 = mysqli_fetch_array($result2)) { ?>
-              <p><?php echo "<b>Comment by " . $row2['rated_by'] . " in " . $row2['course'] . " - " . $row2['term'] . " " . $row2['year'] . ": " . "</b>" . "<i>" . $row2['comment'] . "</i>"; ?></p>
+              <p><?php echo "<b>Comment from " . $row2['rated_by'] . " in " . $row2['course'] . " - " . $row2['term'] . " " . $row2['year'] . ": " . "</b>" . "<i>" . $row2['comment'] . "</i>"; ?></p>
+              <p></p>
+              <?php
+                }
+              ?>
+              <!-- Get the student performance log from the database> -->
+              <h3 style="margin: 50px 0px 20px 0px;">Performance Log</h3>
+              <?php
+              $email = $row['Email'];
+              $result3 = $conn -> query("SELECT * FROM ta_performance WHERE TAEmail='$email'");
+              while($row3 = mysqli_fetch_array($result3)) { ?>
+              <p><?php echo "<b>Comment from prof in " . $row3['CourseNumber'] . " - " . $row3['TermYear'] . ": " . "</b>" . "<i>" . $row3['Comment'] . "</i>"; ?></p>
               <p></p>
               <?php
                 }
@@ -457,7 +477,7 @@ $id = $_SESSION["email"]
               ?>
               <!-- Add TA to a course feature for each unique semester-->
             <div>
-            <h1 style="margin: 50px 0px 20px 0px;">Add TA to a course in <?php echo $row['TermYear'];?> </h1>
+            <h1 style="margin: 50px 0px 20px 0px; color: #a72530;">Add TA to a course in <?php echo $row['TermYear'];?> </h1>
             <form action="../cgi_bin/add_ta_to_course.php" method="post">
                 <?php
                 $term_year = $row['TermYear'];
@@ -507,7 +527,7 @@ $id = $_SESSION["email"]
               ?>
               <!-- Remove TA from a course they have been assigned to-->
             <div>
-            <h1 style="margin: 50px 0px 20px 0px;">Remove a TA from a course</h1>
+            <h1 style="margin: 50px 0px 20px 0px; color: #a72530;">Remove a TA from a course</h1>
             <form action="../cgi_bin/remove_ta_from_course.php" method="post">
               <p></p>
               <i>Choose which TA to remove: </i>

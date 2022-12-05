@@ -2,6 +2,15 @@
 // Start the session
 session_start();
 
+$servername = "localhost";
+$username = "root";
+$password = "";
+$db = "ta-management";
+$conn = new mysqli($servername, $username, $password, $db);
+if ($conn->connect_error) {
+  die("Connection failed: " . $conn->connect_error);
+}
+
 $id = $_SESSION["email"];
 $input = $_POST['course'];
 $string_array = explode("|", $input);
@@ -10,20 +19,11 @@ $isProf_js = "no";
 
 if (count($string_array) == 1 ) {
   // get the TA info needed to delete from the database
-  $servername = "localhost";
-  $username = "root";
-  $password = "";
-  $db = "ta-management";
-  $conn = new mysqli($servername, $username, $password, $db);
-  if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-  }
   $recordID = $string_array[0];
   $result = $conn->query("SELECT * FROM ta_history WHERE RecordID=$recordID");
   $row = mysqli_fetch_assoc($result);
   $term = $row['TermYear'];
   $selected_course = $row['CourseNumber'];
-  $conn->close();
 } else {
   $selected_course = $string_array[0];
   $term = $string_array[1] . " " . $string_array[2];
@@ -36,7 +36,7 @@ if (count($string_array) == 1 ) {
 <html>
   <head>
     <title>TA Management</title>
-    <link href="dashboard.css" rel="stylesheet" />
+    <link href="dashboard_ta_management.css" rel="stylesheet" />
     <link rel="icon" href="../media/favicon.ico" type="image/ico">
     <link
       rel="stylesheet"
@@ -62,6 +62,30 @@ if (count($string_array) == 1 ) {
       .prof {
         display: block;
       }
+
+      .accordion {
+        background-color: #eee;
+        color: #444;
+        cursor: pointer;
+        padding: 18px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 15px;
+        transition: 0.4s;
+      }
+
+      .active2, .accordion:hover {
+        background-color: #ccc; 
+      }
+
+      .panel {
+        padding: 0 18px;
+        display: none;
+        background-color: white;
+        overflow: hidden;
+    }
     </style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -70,6 +94,9 @@ if (count($string_array) == 1 ) {
         jQuery(function($) {
         $('#jquery-select').on('change', function() {
             var url = $(this).val();
+
+            if($(this).val()=="0")
+            window.location = "dashboard.php" 
 
             if($(this).val()=="1")
             window.location = "dashboard_student.php" 
@@ -111,13 +138,15 @@ if (count($string_array) == 1 ) {
         <div class="container-fluid">
           <!-- Logo and User Role  -->
           <div class="d-flex align-items-center">
+          <a href="./dashboard.php">
             <img
               src="../media/mcgill_logo.png"
               style="width: 14rem; height: auto"
               alt="mcgill-logo"
-            />
+            /></a>
             <select class="custom-select" id= "jquery-select">
             
+                <option value="0" selected="selected"  >Dashboard</option>
                 <option value="1" selected="selected"  >Rate a TA </option>
 
                 <?php
@@ -162,22 +191,24 @@ if (count($string_array) == 1 ) {
             </select>
           </div>
           <!-- Logout -->
-          <div>
-            <button
-              type="button"
-              class="btn btn-link"
-              onclick="window.location.replace('../logout/logout.html')"
-            >
-              <i class="fa fa-sign-out" style="font-size: 24px"></i>
-            </button>
-          </div>
+          <div style="display:flex;">
+            <div style="font-size:24px; color: #007bff;"><?php echo $id ?></div>
+            <div style="float:right;">
+              <button
+                type="button"
+                class="btn btn-link"
+                onclick="window.location.replace('../logout/logout.html')"
+              >
+                <i class="fa fa-sign-out" style="font-size: 24px; color: #007bff;"></i>
+              </button>
+            </div>
         </div>
       </nav>
       <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
           <!-- TA performance log - Displayed for a prof only -->
         <a
-            class="nav-item nav-link prof"
+            class="nav-item nav-link active prof"
             data-toggle="tab"
             href="#nav-log"
             role="tab"
@@ -201,7 +232,7 @@ if (count($string_array) == 1 ) {
           >
           <!-- Channel -->
           <a
-            class="nav-item nav-link active"
+            class="nav-item nav-link"
             data-toggle="tab"
             href="#nav-channel"
             role="tab"
@@ -220,11 +251,117 @@ if (count($string_array) == 1 ) {
       <div class="tab-content" id="nav-tabContent">
         <br />
         <!-- TA performance log - Displayed for a prof only -->
-        <div class="tab-pane fade show active" id="nav-log" role="tabpanel">
-        </div>
+        <div class="tab-pane fade show active prof" id="nav-log" role="tabpanel">
+            <div class="form-container" id="form1" style = "background-color='#fff'">
+              <form action="../cgi_bin/add_ta_performance.php" method="post">
+                <h1 style="color: #a72530;">Write a TA performance </h1>
+                <br><br>
+                <!-- SELECT TA -->
+                <label for ="ta"><h5 style="color: #a72530;">Select the TA from the list</h5></label><br>
+                    
+                  <select name="TA" id="TA" required class="custom-select" style="width:auto;">
+                    <?php
+                      $ta_query = "SELECT * FROM ta_history WHERE CourseNumber='$selected_course' AND TermYear='$term'";
+                      
+                      $result = mysqli_query($conn, $ta_query);
+                      
+                      if(mysqli_num_rows($result) > 0){
+                          foreach($result as $r){
+                            $email = $r['TAEmail'];
+                            $name = $r['TAName']; ?>
+                            <option value= "<?php echo $name . "|" . $email . "|" . $selected_course . "|" . $term; ?>"><?php echo $name ?></option>
+                          <?php
+                          }
+                      }
+                      else
+                      {
+                      echo "No Record Found";
+                      }
+                    ?>
+                  </select>
+                  <br><br>
+                  <textarea name = "comment" class="comment" placeholder = "Leave a comment here."></textarea>
+                  <br><br>            
+                  <button type="submit" class ="confirm-btn" id="confirm-btn" name="submit" >Submit</button> <br><br>
+              </form>
+            </div>
+              <div style="margin:0px 0px 100px 0px;">
+              <h1 style="text-align:center; margin-top: 20px; color: #a72530;">View your TA performance log</h1>
+              <?php $result = $conn -> query("SELECT * FROM ta_performance WHERE (TermYear='$term' AND CourseNumber='$selected_course')");
+              while($row = mysqli_fetch_array($result)) {
+            ?>
+                <!-- Get the info from the ta_history database -->
+                <button class="accordion"><?php echo $row['TAName']?></button>
+                <div class="panel" style="margin-top: 20px;">
+                  <p><b>TA Email: </b><?php echo $row['TAEmail']?></p>
+                  <p><b>Comment: </b><i><?php echo $row['Comment']?></i></p>
+                  <p><b>Time stamp: </b><?php echo $row['TimeStamp']?></p>
+                </div>
+              <?php
+                }
+              ?>
+              </div>
+      </div>
 
-        <!-- All TAs report - Displayed for a prof only -->
-        <div class="tab-pane fade" id="nav-wishlist" role="tabpanel">
+        <!-- Wishlist - Displayed for a prof only -->
+        <div class="tab-pane fade prof" id="nav-wishlist" role="tabpanel">
+        <div class="form-container" id="form1" style = "background-color='#fff'">
+              <form action="../cgi_bin/add_ta_to_wishlist.php" method="post">
+                <h1 style="color: #a72530;">TA Wishlist</h1>
+                <br><br>
+                <!-- SELECT TA -->
+                <label for ="ta"><h5 style="color: #a72530;">Select the TA you wish to have from the list below</h5></label><br>
+                    
+                  <select name="TA" id="TA" required class="custom-select" style="width:auto;">
+                    <?php
+                      $query = "SELECT firstName, lastName FROM user WHERE email = '$id'";
+                      $result = mysqli_query($conn, $query);
+                      $row = $result->fetch_assoc(); 
+                      $prof_name = $row['firstName'] . " " . $row['lastName'];
+                      
+                      #email query
+                      $ta_query = "SELECT DISTINCT Email FROM ta_cohort WHERE Email NOT IN (SELECT TAEmail FROM ta_wishlist WHERE (TermYear='$term' AND CourseNumber='$selected_course'))";
+                      
+                      $result = mysqli_query($conn, $ta_query);
+                      
+                      if(mysqli_num_rows($result) > 0){
+                          foreach($result as $r){
+                            $email = $r['Email'];
+                            
+                            #TA name query
+                            $ta_name_query = "SELECT TAName FROM ta_cohort WHERE Email='$email'";
+                            $result1 = mysqli_query($conn, $ta_name_query);
+                            $row1 = $result1->fetch_assoc(); 
+                            $name = $row1['TAName']; 
+                      ?>
+                            <option value= "<?php echo $name . "|" . $email . "|" . $selected_course . "|" . $term . "|" . $prof_name;?>"><?php echo $name ?></option>
+                          <?php
+                          }
+                      }
+                      else
+                      {
+                      echo "No Record Found";
+                      }
+                    ?>
+                  </select>
+                  <br><br>         
+                  <button type="submit" class ="confirm-btn" id="confirm-btn" name="submit" >Submit</button> <br><br>
+              </form>
+            </div>
+              <div style="margin:0px 0px 100px 0px;">
+              <h1 style="text-align:center; margin-top: 20px; color: #a72530;">View your TA Wishlist</h1>
+              <?php $result = $conn -> query("SELECT * FROM ta_wishlist WHERE (TermYear='$term' AND CourseNumber='$selected_course')");
+              while($row = mysqli_fetch_array($result)) {
+            ?>
+                <!-- Get the info from the ta_wishlist database -->
+                <button class="accordion"><?php echo $row['TAName']?></button>
+                <div class="panel" style="margin-top: 20px;">
+                  <p><b>TA Email: </b><?php echo $row['TAEmail']?></p>
+                </div>
+              <?php
+                }
+              ?>
+              </div>
         </div>
 
         <!-- Office Hours -->
@@ -236,8 +373,9 @@ if (count($string_array) == 1 ) {
         </div>
         
         <!-- All TAs Report - Displayed for a prof only -->
-        <div class="tab-pane fade" id="nav-report" role="tabpanel">
+        <div class="tab-pane fade prof" id="nav-report" role="tabpanel">
         </div>
+        <?php $conn->close(); ?>
     </div>
     <div class="footer">.</div> 
     <script>
@@ -250,5 +388,6 @@ if (count($string_array) == 1 ) {
         }
       }
     </script>
+    <script src="./dashboard_ta_management.js"></script>
   </body>
 </html>
