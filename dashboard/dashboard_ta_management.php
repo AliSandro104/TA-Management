@@ -121,9 +121,6 @@ if (count($string_array) == 1 ) {
 
   </head>
   <body>
-    <script src="./manage_users.js"></script>
-    <script src="./manage_courses.js"></script>
-    <script src="./manage_profs.js"></script>
     <script
       src="https://code.jquery.com/jquery-3.3.1.js"
       integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
