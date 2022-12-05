@@ -175,7 +175,7 @@ if ($conn -> connect_error){
                         $query_run3 = mysqli_query($conn, $query3);
           
                         if(mysqli_num_rows($query_run3) > 0) { 
-                          while ($row3 = $query_run1->fetch_assoc()) { ?>
+                          while ($row3 = $query_run3->fetch_assoc()) { ?>
                             <option value="<?php echo $row3['RecordID']; ?>">
                             <?php echo $row3['CourseNumber'] . " - " . $row3['TermYear'] . " as TA"; ?>
                             </option>
