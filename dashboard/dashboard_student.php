@@ -4,9 +4,6 @@
 
   $id = $_SESSION["email"];
 
-
-
-
   $servername = "localhost";
   $username = "root";
   $db_password = "";
@@ -27,9 +24,20 @@
       $ta_course = $ta_info[1] . ' ' . $ta_info[2];
       $ta_term = $ta_info[3];
       $ta_year = $ta_info[4];
+      $anonymous = $_POST['anonymous'] ?? false;
 
-      $query = "insert into ta_rating (rated_by,rating_for,course,term,year,rating,comment) values ('$id','$ta_email', '$ta_course','$ta_term','$ta_year','$rating','$comment')";
+      //if user didn't choose anonymous option add his name to DB as reviewer
+      if (empty ($anonymous)){
+
+        $query = "insert into ta_rating (rated_by,rating_for,course,term,year,rating,comment) values ('$id','$ta_email', '$ta_course','$ta_term','$ta_year','$rating','$comment')";
+        mysqli_query($conn, $query);
+      }
+
+      //else add 'anonymous' as reviewer
+      else{
+      $query = "insert into ta_rating (rated_by,rating_for,course,term,year,rating,comment) values ('Anonymous','$ta_email', '$ta_course','$ta_term','$ta_year','$rating','$comment')";
       mysqli_query($conn, $query);
+      }
 
       //redirect to main dashboard after successful rating submission
       echo "<script>
@@ -61,9 +69,10 @@
 
     />
     <link rel="stylesheet" href="dashboard_student.css">
-    <script type="text/javascript" src="./dashboard_student.js"></script>
+  
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <!-- script to redirect the user to the appropriate page -->
     <script>
         jQuery(function($) {
         $("#jquery-select").on('change', function() {
@@ -89,6 +98,7 @@
             });
         });
       </script>
+      <!--display email address near top right -->
       <style>
         @media only screen and (max-width: 1000px) {
           .email_address {
@@ -137,18 +147,16 @@
                     die ("Connection failed: " . $conn->connect_error);
                     }
 
-                
+                    //get max value of userType ID to give the user access to the pages that he is allowed to
                     $query = "SELECT MAX(userTypeId) FROM user_usertype WHERE userId = '$id'";
                     $query_run = mysqli_query($conn, $query);
               
               
                     if(mysqli_num_rows($query_run) > 0)
-                    {
-              
-                      //while ($row = mysqli_fetch_array($result)){
+                    {   
                         while ($row = $query_run->fetch_assoc()){
                           
-                          
+                          //if user is a sysop (id = 5) give him access to all pages.
                           if ($row['MAX(userTypeId)'] == 5){
                             echo '<option value="2" selected="selected"  >TA management </option>';
                             echo '<option value="4" selected="selected"   >TA administration</option>';
@@ -198,7 +206,8 @@
           <!-- SELECT TA -->
                   
           <label for ="ta"><h5> Select the TA you would like to rate</h5></label><br>
-              
+            
+          <!-- Display all available TA to the user from the DB with their according course, semester and year. -->
             <select name="TA" id="TA" required class="custom-select" style="width:200px;">
               
               <?php
@@ -225,22 +234,20 @@
                         
                         $ta_val= $email .' ' . $course . ' ' . $term . ' ' .$year;
 
+                        //echo TA from DB as an option 
                         echo "<option value= '$ta_val'/> $fname $lname $course/$term $year <br>";
                     }
                 }
-                else
-                {
-                echo "No Record Found";
-                }
-
               ?>
               
             </select>
             <br><br>
-
+                
             <textarea name = "comment" class="comment" placeholder = "Leave a comment here..."></textarea>
 
             <br><br>
+
+            <h5 style = 'color:black'><input type="checkbox" name="anonymous" value='anonymous' /> Anonymous review </h5> <br>
 
             <fieldset class="rating">
               <legend> <h5>Rating out of 5</h5></legend>

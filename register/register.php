@@ -154,13 +154,13 @@
            
            <?php
            //print corresponding error message from register_submit.php
-            
             if(isset($error)){
                 foreach($error as $error){
                     echo '<span class="error-msg">'.$error.'</span>';
                 }
             }
             ?>
+            <!-- required fields for register -->
            <input type="text" name="fname" required placeholder="first name">
            <input type="text" name="lname" required placeholder="last name">
            <input type="email" name="email" required placeholder="email (you@example.com)" multiple>
@@ -238,7 +238,7 @@
             <div class="multiselect" id="Ta_courses" style="display:none">
                 <div class="selectBox" onclick="showTaCheckboxes()" >
                     <select>
-                        <option>Select an at least one*</option>
+                        <option>Select at least one*</option>
                     </select>
                     <div class="overSelect"></div>
                 </div>
@@ -254,6 +254,7 @@
                             $courseNum = $r['courseNumber'];
                             $term = $r['term'];
                             $year = $r['year'];
+                                #get each course from DB and display it in drop down select bar
                                 ?>
                                 <input type="checkbox" name="taCourses[]" value="<?= $courseNum . ' ' . $term . ' ' . $year ; ?>" /> 
                                 <?= $courseNum . ' ' . $term . ' ' . $year ; ?> <br/>

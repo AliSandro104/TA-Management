@@ -1,6 +1,4 @@
-*.container .content .btn:hover{
-    background: crimson;
- }
+
  
  .form-container{
     min-height: 20vh;
@@ -59,23 +57,6 @@
  }
 
 
-.logo {
-background: url(../media/mcgill_logo_white.jpg) no-repeat center left;
-width: 180px;
-height: 75px;
-margin: 18px 0 0 20px;
-display: inline-block;
-border-right: 1px solid #fff;
-}
-
-.header-background {
-width: 100%;
-height: 108px;
-background: #DC241F url(../media/mcgill_background.jpg) no-repeat top right;
-padding: 0;
-margin: 0;
-}
-
 .footer {
 position: fixed;
 left: 0;
@@ -87,65 +68,6 @@ color:#DC241F;
 text-align: center;
 }
 
-multiselect {
-   width: 200px;
- }
- 
- .selectBox {
-   position: relative;
- }
- 
- .selectBox select {
-   width: 100%;
-   font-weight: bold;
- }
- 
- .overSelect {
-   position: absolute;
-   left: 0;
-   right: 0;
-   top: 0;
-   bottom: 0;
- }
- 
- #Student_checkboxes {
-   display: none;
-   border: 1px #dadada solid;
- }
- 
- #Student_checkboxes label {
-   display: block;
- }
- 
- #Student_checkboxes label:hover {
-   background-color: #1e90ff;}
-
-
- #Prof_checkboxes {
-   display: none;
-   border: 1px #dadada solid;
- }
- 
- #Prof_checkboxes label {
-   display: block;
- }
- 
- #Prof_checkboxes label:hover {
-   background-color: #1e90ff;}
-
-
-
- #Ta_checkboxes {
-   display: none;
-   border: 1px #dadada solid;
- }
- 
- #Ta_checkboxes label {
-   display: block;
- }
- 
- #Ta_checkboxes label:hover {
-   background-color: #1e90ff;}
 
  
 .confirm-btn{

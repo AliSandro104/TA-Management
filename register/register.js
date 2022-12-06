@@ -20,14 +20,15 @@ function displayStudentID() {
     }
 }
 
-//to check if the student checkbox is checked and display student ID field
+//display select bar
+//to check if the student checkbox is checked and display courses
 function displayStudentCourses() {
     // Get the student checkbox
     var checkBox = document.getElementById("isStudent");
-    // Get the student ID box field
+    // Get the courses checkbox
     var courses = document.getElementById("Student_courses");
 
-    // If the checkbox is checked, display the student ID field and make it required
+    // If the checkbox is checked, display the available courses
     if (checkBox.checked){
         courses.style.display = "initial";
       
@@ -38,7 +39,7 @@ function displayStudentCourses() {
 }
 
 var Student_expanded = false;
-
+//display dropdown
 function showStudentCheckboxes() {
   var checkboxes = document.getElementById("Student_checkboxes");
   if (!Student_expanded) {
@@ -56,14 +57,14 @@ function showStudentCheckboxes() {
 
 //JAVASCRIPT FOR PROF SECTION
 
-//to check if the student checkbox is checked and display student ID field
+//to check if the professor checkbox is checked and display courses
 function displayProfCourses() {
-    // Get the student checkbox
+    // Get the professor checkbox
     var checkBox = document.getElementById("isProf");
-    // Get the student ID box field
+    //get courses checkboxes
     var courses = document.getElementById("Prof_courses");
 
-    // If the checkbox is checked, display the student ID field and make it required
+    // If the checkbox is checked, display select box
     if (checkBox.checked == true){
         courses.style.display = "initial";
       
@@ -75,6 +76,7 @@ function displayProfCourses() {
 
 var Prof_expanded = false;
 
+//display dropdown
 function showProfCheckboxes() {
   var checkboxes = document.getElementById("Prof_checkboxes");
   if (!Prof_expanded) {
@@ -90,14 +92,14 @@ function showProfCheckboxes() {
 
 //JAVASCRIPT FOR TA SECTION
 
-//to check if the student checkbox is checked and display student ID field
+//to check if the TA checkbox is checked and display courses
 function displayTaCourses() {
-    // Get the student checkbox
+    // Get the TA checkbox
     var checkBox = document.getElementById("isTA");
-    // Get the student ID box field
+    // Get the TA courses options
     var courses = document.getElementById("Ta_courses");
 
-    // If the checkbox is checked, display the student ID field and make it required
+    // If the checkbox is checked, display select bar
     if (checkBox.checked == true){
         courses.style.display = "initial";
       
@@ -109,6 +111,7 @@ function displayTaCourses() {
 
 var Ta_expanded = false;
 
+//display dropdown
 function showTaCheckboxes() {
   var checkboxes = document.getElementById("Ta_checkboxes");
   if (!Ta_expanded) {
