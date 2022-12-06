@@ -125,6 +125,13 @@ if ($conn -> connect_error){
     font-weight: bold;
     color:#fff;
   }
+
+  @media only screen and (max-width: 1000px) {
+  
+    .email_address {
+      display: none;
+    }
+  }
   </style>
 
   <body>
@@ -185,7 +192,7 @@ if ($conn -> connect_error){
           </div>
           <!-- Logout -->
           <div style="display:flex;">
-            <div style="font-size:24px; color: #007bff;"><?php echo $id ?></div>
+            <div class="email_address"style="font-size:24px; color: #007bff;"><?php echo $id ?></div>
             <div style="float:right;">
               <button
                 type="button"

@@ -33,6 +33,12 @@ $id = $_SESSION["email"]
         color:#DC241F;
         text-align: center;
       }
+
+      @media only screen and (max-width: 1000px) {
+        .email_address {
+          display: none;
+        }
+      }  
     </style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -207,7 +213,7 @@ if (array_key_exists("email", $_SESSION)) {
           </div>
           <!-- Logout -->
           <div style="display:flex;">
-            <div style="font-size:24px; color: #007bff;"><?php echo $id ?></div>
+            <div style="font-size:24px; color: #007bff;" class="email_address"><?php echo $id ?></div>
             <div style="float:right;">
               <button
                 type="button"
