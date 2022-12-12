@@ -1,8 +1,8 @@
 <?php
 $servername = "localhost"; // Change accordingly
-$username = "xampp_starter"; // Change accordingly
-$password = "qV[eoVIhLYT/uYgr"; // Change accordingly
-$db = "xampp_starter"; // Change accordingly
+$username = "root"; // Change accordingly
+$password = ""; // Change accordingly
+$db = "ta-management"; // Change accordingly
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $db);
@@ -41,7 +41,8 @@ while ($prof = $result->fetch_assoc()) {
         <td>'. $user['lastName'] .'</td>
         <td>'. $prof['faculty'] .'</td>
         <td>'. $prof['department'] .'</td>
-        <td> </td>
+        <td>'. $prof['course'] .'</td>
+        
     </tr>';
 }
 

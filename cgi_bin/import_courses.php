@@ -1,8 +1,9 @@
 <?php
 $servername = "localhost"; // Change accordingly
-$username = "xampp_starter"; // Change accordingly
-$password = "qV[eoVIhLYT/uYgr"; // Change accordingly
-$db = "xampp_starter"; // Change accordingly
+$username = "root"; // Change accordingly
+$password = ""; // Change accordingly
+$db = "ta-management"; // Change accordingly
+
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $db);
@@ -30,4 +31,6 @@ if(isset($_FILES['file'])){
     }
 }
 $conn->close();
+header("Location: ../dashboard/dashboard_sysop.php");
+exit();
 ?>

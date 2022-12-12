@@ -82,7 +82,7 @@ if (array_key_exists("email", $_SESSION)) {
     $servername = "localhost"; // Change accordingly
     $username = "root"; // Change accordingly
     $password = ""; // Change accordingly
-    $db = "users"; // Change accordingly
+    $db = "ta-management"; // Change accordingly
 
     // Create connection
     $conn = new mysqli($servername, $username, $password, $db);
@@ -275,8 +275,9 @@ if (array_key_exists("email", $_SESSION)) {
                 <div class="modal-content">
                   <form
                     id="upload-prof-form"
-                    action="javascript:saveMultipleProfAccounts()"
+                    action="../cgi_bin/import_profs.php"
                     method="post"
+                    enctype = "multipart/form-data"
                   >
                     <div class="modal-header">
                       <h3 class="modal-title">Import Professors</h3>
@@ -334,7 +335,7 @@ if (array_key_exists("email", $_SESSION)) {
                     <div class="modal-content">
                       <form
                         id="add-profs-form"
-                        action="javascript:saveProfAccount()"
+                        action="../cgi_bin/add_profs.php"
                         method="post"
                       >
                         <div class="modal-header">
@@ -408,7 +409,7 @@ if (array_key_exists("email", $_SESSION)) {
             <br />
 
             <!-- Display Professors -->
-            <div id="profs-table"></div>
+            <div style="margin-bottom:100px;" id="profs-table"><?php include '../cgi_bin/get_profs.php';?></div>
           </div>
         </div>
 
@@ -435,8 +436,9 @@ if (array_key_exists("email", $_SESSION)) {
                 <div class="modal-content">
                   <form
                     id="upload-course-form"
-                    action="javascript:saveMultipleCourses()"
+                    action="../cgi_bin/import_courses.php"
                     method="post"
+                    enctype = "multipart/form-data"
                   >
                     <div class="modal-header">
                       <h3 class="modal-title">Import Courses</h3>
@@ -494,13 +496,14 @@ if (array_key_exists("email", $_SESSION)) {
                   id="add-new-course"
                   tabindex="-1"
                   role="dialog"
-                >
+                ><!--javascript:saveCourse()-->
                   <div class="modal-dialog" role="document">
                     <div class="modal-content">
                       <form
                         id="add-course-form"
-                        action="javascript:saveCourse()"
+                        action="../cgi_bin/add_courses.php"                          
                         method="post"
+                        
                       >
                         <div class="modal-header">
                           <h3 class="modal-title">Add a Course</h3>
@@ -579,7 +582,7 @@ if (array_key_exists("email", $_SESSION)) {
             <br />
 
             <!-- Display Courses -->
-            <div id="course-table"></div>
+            <div style="margin-bottom:100px;" id="course-table"><?php include '../cgi_bin/get_courses.php';?></div>
           </div>
         </div>
 
@@ -600,8 +603,9 @@ if (array_key_exists("email", $_SESSION)) {
               <div class="modal-content">
                 <form
                   id="upload-user-form"
-                  action="javascript:saveMultipleNewAccounts()"
+                  action="../cgi_bin/import_users.php"
                   method="post"
+                  enctype = "multipart/form-data"
                 >
                   <div class="modal-header">
                     <h3 class="modal-title">Import Users</h3>
@@ -659,7 +663,7 @@ if (array_key_exists("email", $_SESSION)) {
                     <div class="modal-content">
                       <form
                         id="add-user-form"
-                        action="javascript:saveNewAccount()"
+                        action="../cgi_bin/add_users.php"
                         method="post"
                       >
                         <div class="modal-header">
@@ -678,13 +682,13 @@ if (array_key_exists("email", $_SESSION)) {
                               class="form-control"
                               placeholder="Enter the first name of the user"
                               type="text"
-                              name="first-name"
+                              name="firstname"
                             /><br />
                             <input
                               class="form-control"
                               placeholder="Enter the last name of the user"
                               type="text"
-                              name="last-name"
+                              name="lastname"
                             /><br />
                             <input
                               class="form-control"
@@ -696,7 +700,7 @@ if (array_key_exists("email", $_SESSION)) {
                               class="form-control"
                               placeholder="Enter temporary password"
                               type="password"
-                              name="pwd"
+                              name="password"
                             /><br />
                             <div class="container">
                               <div class="flex-row">
@@ -797,7 +801,8 @@ if (array_key_exists("email", $_SESSION)) {
           <br />
 
           <!-- Display Users -->
-          <div id="user-table"></div>
+          <div style="margin-bottom:100px;" id="user-table"> <?php include '../cgi_bin/get_users.php';?>
+          </div>
         </div>
       </div>
     </div>

@@ -1,8 +1,8 @@
 <?php
 $servername = "localhost"; // Change accordingly
-$username = "xampp_starter"; // Change accordingly
-$password = "qV[eoVIhLYT/uYgr"; // Change accordingly
-$db = "xampp_starter"; // Change accordingly
+$username = "root"; // Change accordingly
+$password = ""; // Change accordingly
+$db = "ta-management"; // Change accordingly
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $db);
@@ -12,7 +12,11 @@ if ($conn->connect_error) {
 }
 
 // define all fields to add to the database
+$sysop1 = $_POST['sysop'];
+echo "<b>" .  $sysop1 ."</b>";
 $password = $_POST['password'];
+echo "<b>" .  $password ."</b>";
+
 $hashed_pass = password_hash($password, PASSWORD_DEFAULT);
 $email = $_POST['email'];
 $first_name = $_POST['firstname'];
@@ -48,5 +52,20 @@ if ($result) {
     echo "<p>Account created successfully!</p>";
 } else {
     echo "<p>Account creation failed...</p>";
-} 
+}
+
+function IsChecked($chkname,$value)
+    {
+        if(!empty($_POST[$chkname]))
+        {
+            foreach($_POST[$chkname] as $chkval)
+            {
+                if($chkval == $value)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 ?>
