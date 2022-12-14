@@ -1,8 +1,8 @@
 <?php
-$servername = "localhost"; // Change accordingly
-$username = "xampp_starter"; // Change accordingly
-$password = "qV[eoVIhLYT/uYgr"; // Change accordingly
-$db = "xampp_starter"; // Change accordingly
+$servername = "localhost";
+$username = "root";
+$password = "";
+$db = "ta-management";
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $db);
@@ -12,12 +12,18 @@ if ($conn->connect_error) {
 }
 
 // define all fields to add to the database
-$course_number = $_POST['courseNumber'];
-$course_name = $_POST['courseName'];
-$course_description = $_POST['courseDescription'];
-$course_term = $_POST['term'];
-$course_year = $_POST['year'];
-$course_instructor_email = $_POST['instrEmail'];
+$course_number = $_POST['course-number'];
+
+$course_number = strtoupper($course_number);
+if (mb_substr($course_number, 4,1) != " ") {
+    $course_number = substr_replace($course_number, " ", 4, 0);
+}
+
+$course_name = $_POST['course-name'];
+$course_description = $_POST['course-description'];
+$course_term = $_POST['course-term'];
+$course_year = $_POST['course-year'];
+$course_instructor_email = $_POST['instructor-email'];
 
 $sql = $conn->prepare("SELECT * FROM Course WHERE courseNumber = ?");
 $sql->bind_param('s', $course_number);
@@ -41,5 +47,6 @@ if ($result) {
     echo "<p>Account created successfully!</p>";
 } else {
     echo "<p>Account creation failed...</p>";
-} 
+}
+header("Location: ../dashboard/dashboard_sysop.php"); 
 ?>

@@ -1,8 +1,9 @@
 <?php
-$servername = "localhost"; // Change accordingly
-$username = "xampp_starter"; // Change accordingly
-$password = "qV[eoVIhLYT/uYgr"; // Change accordingly
-$db = "xampp_starter"; // Change accordingly
+$servername = "localhost";
+$username = "root";
+$password = "";
+$db = "ta-management";
+
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $db);
@@ -42,7 +43,9 @@ while ($course = $result->fetch_assoc()) {
         <td>'. $course['courseDesc'] .'</td>
         <td>'. $course['term'] .'</td>
         <td>'. $course['year'] .'</td>
-        <td>'. $user['firstName'] . ' ' . $user['lastName'] . '</td>
+        <td>'. $user['firstName'] . ' ' . $user['lastName'] . '</td> 
+        <td><u>edit</u></td>
+        <td><a href="delete_course.php?course='. $course['courseNumber'] .'">Delete</a></td>
     </tr>';
 }
 
