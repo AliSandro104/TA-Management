@@ -42,7 +42,7 @@ while ($prof = $result->fetch_assoc()) {
         <td>'. $prof['faculty'] .'</td>
         <td>'. $prof['department'] .'</td>
         <td>'. $prof['course'] .'</td>
-        
+        <td><a href="delete_prof.php?prof='. $prof['professor'] .'">Delete</a></td>
     </tr>';
 }
 

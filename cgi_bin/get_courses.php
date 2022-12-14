@@ -43,7 +43,8 @@ while ($course = $result->fetch_assoc()) {
         <td>'. $course['courseDesc'] .'</td>
         <td>'. $course['term'] .'</td>
         <td>'. $course['year'] .'</td>
-        <td>'. $user['firstName'] . ' ' . $user['lastName'] . '</td>
+        <td>'. $user['firstName'] . ' ' . $user['lastName'] . '</td> 
+        <td><a href="delete_course.php?course='. $course['courseNumber'] .'">Delete</a></td>
     </tr>';
 }
 
