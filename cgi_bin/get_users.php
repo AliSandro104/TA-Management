@@ -64,6 +64,7 @@ while ($user = $result->fetch_assoc()) {
         <td>'. $user['firstName'] .'</td>
         <td>'. $user['lastName'] .'</td>
         <td>'. $userRoles .'</td>
+        <td><u>edit</u></td>
         <td><a href="delete_user.php?user='. $user['email'] .'">Delete</a></td>
     </tr>';
 }
