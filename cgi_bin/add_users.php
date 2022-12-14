@@ -1,8 +1,8 @@
 <?php
-$servername = "localhost"; // Change accordingly
-$username = "root"; // Change accordingly
-$password = ""; // Change accordingly
-$db = "ta-management"; // Change accordingly
+$servername = "localhost";
+$username = "root";
+$password = "";
+$db = "ta-management";
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $db);
@@ -12,17 +12,13 @@ if ($conn->connect_error) {
 }
 
 // define all fields to add to the database
-$sysop1 = $_POST['sysop'];
-echo "<b>" .  $sysop1 ."</b>";
-$password = $_POST['password'];
-echo "<b>" .  $password ."</b>";
+$usertypes = $_POST['usertypes'];
 
+$password = $_POST['password'];
 $hashed_pass = password_hash($password, PASSWORD_DEFAULT);
 $email = $_POST['email'];
 $first_name = $_POST['firstname'];
 $last_name = $_POST['lastname'];
-$account_types = $_POST['accounttypes'];
-$account_types = json_decode($account_types, true); // convert JSON to array of account types
 
 $sql = $conn->prepare("SELECT * FROM User WHERE email = ?");
 $sql->bind_param('s', $email);
@@ -39,9 +35,10 @@ if ($user) {
     $sql = $conn->prepare("INSERT INTO User (firstName, lastName, email, password) VALUES (?, ?, ?, ?)");
     $sql->bind_param('ssss', $first_name, $last_name, $email, $hashed_pass);
     if ($sql->execute()) {
-        foreach ($account_types as $account_type) {
-            $user_type_sql = $conn->prepare("INSERT INTO User_UserType (userId, userTypeId) VALUES (?, ?)");
-            $user_type_sql->bind_param('si', $email, $account_type);
+        foreach ($usertypes as $usertype) {
+            $usertype = intval($usertype);
+            $user_type_sql = $conn->prepare("INSERT INTO user_userType (userId, userTypeId) VALUES (?, ?)");
+            $user_type_sql->bind_param('si', $email, $usertype);
             $user_type_sql->execute();
         }
     }
@@ -53,19 +50,5 @@ if ($result) {
 } else {
     echo "<p>Account creation failed...</p>";
 }
-
-function IsChecked($chkname,$value)
-    {
-        if(!empty($_POST[$chkname]))
-        {
-            foreach($_POST[$chkname] as $chkval)
-            {
-                if($chkval == $value)
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+header("Location: ../dashboard/dashboard_sysop.php");
 ?>

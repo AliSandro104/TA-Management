@@ -1,9 +1,8 @@
 <?php
-$servername = "localhost"; // Change accordingly
-$username = "root"; // Change accordingly
-$password = ""; // Change accordingly
-$db = "ta-management"; // Change accordingly
-
+$servername = "localhost";
+$username = "root";
+$password = "";
+$db = "ta-management";
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $db);
@@ -17,6 +16,11 @@ $instructor_email = $_POST['professor'];
 $faculty = $_POST['faculty'];
 $department = $_POST['department'];
 $course_number = $_POST['course'];
+
+$course_number = strtoupper($course_number);
+if (mb_substr($course_number, 4,1) != " ") {
+    $course_number = substr_replace($course_number, " ", 4, 0);
+}
 
 $sql = $conn->prepare("SELECT * FROM Professor WHERE professor = ?");
 $sql->bind_param('s', $email);
@@ -40,5 +44,6 @@ if ($result) {
     echo "<p>Account created successfully!</p>";
 } else {
     echo "<p>Account creation failed...</p>";
-} 
+}
+header("Location: ../dashboard/dashboard_sysop.php");  
 ?>

@@ -1,8 +1,8 @@
 <?php
-$servername = "localhost"; // Change accordingly
-$username = "root"; // Change accordingly
-$password = ""; // Change accordingly
-$db = "ta-management"; // Change accordingly
+$servername = "localhost";
+$username = "root";
+$password = "";
+$db = "ta-management";
 
 
 // Create connection

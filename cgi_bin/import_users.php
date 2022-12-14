@@ -1,8 +1,8 @@
 <?php
-$servername = "localhost"; // Change accordingly
-$username = "root"; // Change accordingly
-$password = ""; // Change accordingly
-$db = "ta-management"; // Change accordingly
+$servername = "localhost";
+$username = "root";
+$password = "";
+$db = "ta-management";
 
 
 // Create connection
@@ -18,9 +18,9 @@ function user_role_id_map($role){
     return($key);
 }
 
-// Missing a lot of error checks
-if(isset($_FILES['file'])){
-    $file_content = file($_FILES['file']['tmp_name']);
+// get file content and store them in the database
+if(isset($_FILES['myfile'])){
+    $file_content = file($_FILES['myfile']['tmp_name']);
     foreach($file_content as $row) {
         $items = explode(",", trim($row));
         $first_name = $items[0];
@@ -30,11 +30,11 @@ if(isset($_FILES['file'])){
         $hashed_pass = password_hash($password, PASSWORD_DEFAULT);
         $account_types = explode('/', $items[4]);
         $account_types = array_map("user_role_id_map", $account_types);
-        $sql = $conn->prepare("INSERT INTO User (firstName, lastName, email, password) VALUES (?, ?, ?, ?)");
+        $sql = $conn->prepare("INSERT INTO user (firstName, lastName, email, password) VALUES (?, ?, ?, ?)");
         $sql->bind_param('ssss', $first_name, $last_name, $email, $hashed_pass);
         if ($sql->execute()) {
             foreach ($account_types as $account_type) {
-                $user_type_sql = $conn->prepare("INSERT INTO User_UserType (userId, userTypeId) VALUES (?, ?)");
+                $user_type_sql = $conn->prepare("INSERT INTO user_userType (userId, userTypeId) VALUES (?, ?)");
                 $user_type_sql->bind_param('si', $email, $account_type);
                 $user_type_sql->execute();
             }

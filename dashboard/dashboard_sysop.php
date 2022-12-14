@@ -263,7 +263,7 @@ if (array_key_exists("email", $_SESSION)) {
               data-target="#import-profs"
             >
               <i class="fa fa-download"></i>
-              Import
+              Import Professors
             </button>
             <div
               class="modal fade"
@@ -291,7 +291,7 @@ if (array_key_exists("email", $_SESSION)) {
                       </button>
                     </div>
                     <div class="modal-body">
-                      <input id="prof-upload-csv" type="file" />
+                      <input type="file" name="myfile"/>
                     </div>
                     <div class="modal-footer">
                       <input
@@ -300,7 +300,7 @@ if (array_key_exists("email", $_SESSION)) {
                         data-dismiss="modal"
                         value="Cancel"
                       />
-                      <input type="submit" class="btn btn-light" value="Save" />
+                      <input type="submit" class="btn btn-light"/>
                     </div>
                   </form>
                 </div>
@@ -355,7 +355,7 @@ if (array_key_exists("email", $_SESSION)) {
                               class="form-control"
                               placeholder="Instructor Email"
                               type="text"
-                              name="inst-email"
+                              name="professor"
                             /><br />
                             <select class="form-control" name="faculty">
                               <option value="" selected disabled>
@@ -365,7 +365,7 @@ if (array_key_exists("email", $_SESSION)) {
                               <option value="Engineering">Engineering</option>
                               <option value="Arts">Arts</option></select
                             ><br />
-                            <select class="form-control" name="dept">
+                            <select class="form-control" name="department">
                               <option value="" selected disabled>
                                 Select a Department...
                               </option>
@@ -379,7 +379,7 @@ if (array_key_exists("email", $_SESSION)) {
                               class="form-control"
                               placeholder="Course Number"
                               type="text"
-                              name="crn-num"
+                              name="course"
                             /><br />
                             <div id="prof-error-msg-cont"></div>
                           </div>
@@ -395,7 +395,6 @@ if (array_key_exists("email", $_SESSION)) {
                           <input
                             type="submit"
                             class="btn btn-light"
-                            data-dismiss="modal"
                             value="Save"
                           />
                         </div>
@@ -424,7 +423,7 @@ if (array_key_exists("email", $_SESSION)) {
               data-target="#import-courses"
             >
               <i class="fa fa-download"></i>
-              Import
+              Import Courses
             </button>
             <div
               class="modal fade"
@@ -452,7 +451,7 @@ if (array_key_exists("email", $_SESSION)) {
                       </button>
                     </div>
                     <div class="modal-body">
-                      <input id="course-upload-csv" type="file" />
+                      <input type="file" name="myfile"/>
                     </div>
                     <div class="modal-footer">
                       <input
@@ -464,8 +463,6 @@ if (array_key_exists("email", $_SESSION)) {
                       <input
                         type="submit"
                         class="btn btn-light"
-                        data-dismiss="modal"
-                        value="Save"
                       />
                     </div>
                   </form>
@@ -496,7 +493,7 @@ if (array_key_exists("email", $_SESSION)) {
                   id="add-new-course"
                   tabindex="-1"
                   role="dialog"
-                ><!--javascript:saveCourse()-->
+                >
                   <div class="modal-dialog" role="document">
                     <div class="modal-content">
                       <form
@@ -522,37 +519,37 @@ if (array_key_exists("email", $_SESSION)) {
                               class="form-control"
                               placeholder="Please enter the course number."
                               type="text"
-                              name="crn-number"
+                              name="course-number"
                             /><br />
                             <input
                               class="form-control"
                               placeholder="Please enter the course name."
                               type="text"
-                              name="crn-name"
+                              name="course-name"
                             /><br />
                             <input
                               class="form-control"
                               placeholder="Please enter the course description."
                               type="text"
-                              name="crn-dscrpn"
+                              name="course-description"
                             /><br />
                             <input
                               class="form-control"
                               placeholder="Please enter the course term."
                               type="text"
-                              name="crn-term"
+                              name="course-term"
                             /><br />
                             <input
                               class="form-control"
                               placeholder="Please enter the course year."
                               type="text"
-                              name="crn-year"
+                              name="course-year"
                             /><br />
                             <input
                               class="form-control"
                               placeholder="Please enter the course instructor's email."
                               type="text"
-                              name="crn-email"
+                              name="instructor-email"
                             /><br />
                             <div id="course-error-msg-cont"></div>
                           </div>
@@ -568,7 +565,6 @@ if (array_key_exists("email", $_SESSION)) {
                           <input
                             type="submit"
                             class="btn btn-light"
-                            data-dismiss="modal"
                             value="Save"
                           />
                         </div>
@@ -596,7 +592,7 @@ if (array_key_exists("email", $_SESSION)) {
             data-target="#import-users"
           >
             <i class="fa fa-download"></i>
-            Import
+            Import Users
           </button>
           <div class="modal fade" id="import-users" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
@@ -619,7 +615,7 @@ if (array_key_exists("email", $_SESSION)) {
                     </button>
                   </div>
                   <div class="modal-body">
-                    <input id="user-upload-csv" type="file" />
+                    <input type="file" name="myfile"/>
                   </div>
                   <div class="modal-footer">
                     <input
@@ -628,7 +624,7 @@ if (array_key_exists("email", $_SESSION)) {
                       data-dismiss="modal"
                       value="Cancel"
                     />
-                    <input type="submit" class="btn btn-light" value="Save" />
+                    <input type="submit" class="btn btn-light"/>
                   </div>
                 </form>
               </div>
@@ -709,26 +705,17 @@ if (array_key_exists("email", $_SESSION)) {
                                     <input
                                       type="checkbox"
                                       class="form-check-input"
-                                      name="student"
-                                      value="student"
-                                    />
-                                    <label
-                                      class="form-check-label"
-                                      for="student"
-                                      >Student</label
-                                    >
+                                      name="usertypes[]"
+                                      value="1"
+                                    /> Student
                                   </div>
                                   <div>
                                     <input
                                       type="checkbox"
-                                      name="professor"
-                                      value="professor"
+                                      name="usertypes[]"
+                                      value="2"
                                     />
-                                    <label
-                                      class="form-check-label"
-                                      for="professor"
-                                      >Professor</label
-                                    >
+                                    Professor
                                   </div>
                                 </div>
                               </div>
@@ -738,23 +725,19 @@ if (array_key_exists("email", $_SESSION)) {
                                     <input
                                       class="form-check-input"
                                       type="checkbox"
-                                      name="admin"
-                                      value="admin"
+                                      name="usertypes[]"
+                                      value="4"
                                     />
-                                    <label class="form-check-label" for="admin"
-                                      >TA Administrator</label
-                                    >
+                                    TA Administrator
                                   </div>
                                   <div>
                                     <input
                                       class="form-check-input"
                                       type="checkbox"
-                                      name="ta"
-                                      value="ta"
+                                      name="usertypes[]"
+                                      value="3"
                                     />
-                                    <label class="form-check-label" for="ta"
-                                      >Teaching Assistant</label
-                                    >
+                                    Teaching Assistant
                                   </div>
                                 </div>
                               </div>
@@ -764,12 +747,10 @@ if (array_key_exists("email", $_SESSION)) {
                                     <input
                                       class="form-check-input"
                                       type="checkbox"
-                                      name="sysop"
-                                      value="sysop"
+                                      name="usertypes[]"
+                                      value="5"
                                     />
-                                    <label class="form-check-label" for="sysop"
-                                      >System Operator</label
-                                    >
+                                    System Operator
                                   </div>
                                 </div>
                               </div>
