@@ -11,10 +11,10 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$email = $_GET['prof'];
+$course = $_GET['course'];
 
 // delete the user from the user database
-$sql = "DELETE FROM professor WHERE professor = '$email'";
+$sql = "DELETE FROM course WHERE courseNumber = '$course'";
 mysqli_query($conn, $sql);
 header("Location: ../dashboard/dashboard_sysop.php");  
 ?>
