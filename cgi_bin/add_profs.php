@@ -33,7 +33,6 @@ if ($user) {
     $conn->close();
     die();
 } else {
-    $hashed_pass = password_hash($password, PASSWORD_DEFAULT);
     $sql = $conn->prepare("INSERT INTO Professor (professor, faculty, department, course) VALUES (?, ?, ?, ?)");
     $sql->bind_param('ssss', $instructor_email, $faculty, $department, $course_number);
     $result = $sql->execute();

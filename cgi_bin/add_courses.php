@@ -36,7 +36,6 @@ if ($course) {
     $conn->close();
     die();
 } else {
-    $hashed_pass = password_hash($password, PASSWORD_DEFAULT);
     $sql = $conn->prepare("INSERT INTO Course (courseName, courseDesc, term, year, courseNumber, courseInstructor) VALUES (?, ?, ?, ?, ?, ?)");
     $sql->bind_param('ssssss', $course_name, $course_description, $course_term, $course_year, $course_number, $course_instructor_email);
     $result = $sql->execute();
