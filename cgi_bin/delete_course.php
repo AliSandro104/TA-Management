@@ -13,7 +13,7 @@ if ($conn->connect_error) {
 
 $course = $_GET['course'];
 
-// delete the user from the user database
+// delete the course from the course database
 $sql = "DELETE FROM course WHERE courseNumber = '$course'";
 mysqli_query($conn, $sql);
 header("Location: ../dashboard/dashboard_sysop.php");  
